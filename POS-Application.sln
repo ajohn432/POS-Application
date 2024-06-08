@@ -1,0 +1,33 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.10.34928.147
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "POS-Application.Server", "POS-Application.Server\POS-Application.Server.csproj", "{376BD42B-39E5-4ACA-BF00-BCC006B56C3D}"
+EndProject
+Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "pos-application.client", "pos-application.client\pos-application.client.esproj", "{BCC8B2FA-7363-4729-A719-B2DE0EBE383D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{376BD42B-39E5-4ACA-BF00-BCC006B56C3D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{376BD42B-39E5-4ACA-BF00-BCC006B56C3D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{376BD42B-39E5-4ACA-BF00-BCC006B56C3D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{376BD42B-39E5-4ACA-BF00-BCC006B56C3D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BCC8B2FA-7363-4729-A719-B2DE0EBE383D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BCC8B2FA-7363-4729-A719-B2DE0EBE383D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BCC8B2FA-7363-4729-A719-B2DE0EBE383D}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{BCC8B2FA-7363-4729-A719-B2DE0EBE383D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BCC8B2FA-7363-4729-A719-B2DE0EBE383D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BCC8B2FA-7363-4729-A719-B2DE0EBE383D}.Release|Any CPU.Deploy.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {52FED741-0745-4B83-AC0D-6954F13AB739}
+	EndGlobalSection
+EndGlobal
