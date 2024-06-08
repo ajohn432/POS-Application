@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using POS_Application.Server.Services.Interfaces;
 
 namespace POS_Application.Server.Controllers
 {
@@ -6,5 +7,11 @@ namespace POS_Application.Server.Controllers
     [Route("[controller]")]
     public class OrderController : ControllerBase
     {
+        private readonly IOrderService _orderService;
+
+        public OrderController(IOrderService orderService)
+        {
+            _orderService = orderService;
+        }
     }
 }
