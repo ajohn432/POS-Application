@@ -1,4 +1,4 @@
-namespace POS_Application.Server
+namespace POS_Application.Server.Models
 {
     public class WeatherForecast
     {
