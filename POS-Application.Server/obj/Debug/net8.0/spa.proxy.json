@@ -3,7 +3,7 @@
 "ServerUrl": "https://localhost:5173",
 "RedirectUrl": "",
 "LaunchCommand": "npm run dev",
-"WorkingDirectory": "C:\\Users\\Ninja\\OneDrive\\Documents\\School Shit\\Summer 2024\\POS-Application\\POS-Application.Server\\..\\pos-application.client",
+"WorkingDirectory": "C:\\Users\\Ninja\\Documents\\School Shit\\School Shit 2024 Summer\\POS-Application\\POS-Application.Server\\..\\pos-application.client",
 "MaxTimeoutInSeconds": "120",
 "KeepRunning": "false"
 }

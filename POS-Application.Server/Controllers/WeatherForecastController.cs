@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using MySqlConnector;
 using POS_Application.Server.Models;
 
 namespace POS_Application.Server.Controllers

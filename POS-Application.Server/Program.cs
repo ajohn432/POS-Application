@@ -1,3 +1,9 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
+using Pomelo.EntityFrameworkCore.MySql;
+
+using POS_Application.Server.db;
 using POS_Application.Server.Services;
 using POS_Application.Server.Services.Interfaces;
 
@@ -13,6 +19,10 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseMySql(builder.Configuration.GetConnectionString("pos-database"),
+        new MySqlServerVersion(new Version(8,0,35))));
 
 var app = builder.Build();
 
@@ -33,5 +43,4 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.MapFallbackToFile("/index.html");
-
 app.Run();
