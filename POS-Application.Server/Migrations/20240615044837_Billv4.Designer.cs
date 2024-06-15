@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using POS_Application.Server.db;
 
@@ -10,9 +11,11 @@ using POS_Application.Server.db;
 namespace POS_Application.Server.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240615044837_Billv4")]
+    partial class Billv4
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -99,10 +102,6 @@ namespace POS_Application.Server.Migrations
                     b.Property<string>("IngredientId")
                         .HasColumnType("varchar(255)");
 
-                    b.Property<string>("ItemId")
-                        .IsRequired()
-                        .HasColumnType("varchar(255)");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -112,8 +111,6 @@ namespace POS_Application.Server.Migrations
                         .HasColumnType("decimal(10, 2)");
 
                     b.HasKey("IngredientId");
-
-                    b.HasIndex("ItemId");
 
                     b.ToTable("Ingredient");
                 });
@@ -193,13 +190,11 @@ namespace POS_Application.Server.Migrations
 
             modelBuilder.Entity("POS_Application.Server.Models.Ingredient", b =>
                 {
-                    b.HasOne("POS_Application.Server.Models.BillItem", "BillItem")
+                    b.HasOne("POS_Application.Server.Models.BillItem", null)
                         .WithMany("Ingredients")
-                        .HasForeignKey("ItemId")
+                        .HasForeignKey("IngredientId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("BillItem");
                 });
 
             modelBuilder.Entity("POS_Application.Server.Models.TokenInfo", b =>

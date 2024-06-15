@@ -54,7 +54,6 @@
         public string EmployeeId { get; set; }
         public string Role { get; set; }
     }
-
     #endregion SessionCheck
 
     #endregion Token Management

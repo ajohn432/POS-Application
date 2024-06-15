@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using POS_Application.Server.db;
 
@@ -10,9 +11,11 @@ using POS_Application.Server.db;
 namespace POS_Application.Server.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240615041247_InitialBill")]
+    partial class InitialBill
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -49,13 +52,17 @@ namespace POS_Application.Server.Migrations
             modelBuilder.Entity("POS_Application.Server.Models.BillItem", b =>
                 {
                     b.Property<string>("ItemId")
-                        .HasColumnType("varchar(255)");
+                        .HasMaxLength(10)
+                        .HasColumnType("varchar(10)");
 
                     b.Property<decimal>("BasePrice")
-                        .HasColumnType("decimal(18, 2)");
+                        .HasColumnType("decimal(65,30)");
 
                     b.Property<string>("BillId")
                         .IsRequired()
+                        .HasColumnType("varchar(10)");
+
+                    b.Property<string>("BillId1")
                         .HasColumnType("varchar(10)");
 
                     b.Property<bool>("IsInStock")
@@ -72,20 +79,25 @@ namespace POS_Application.Server.Migrations
 
                     b.HasIndex("BillId");
 
-                    b.ToTable("BillItem");
+                    b.HasIndex("BillId1");
+
+                    b.HasIndex("ItemId")
+                        .IsUnique();
+
+                    b.ToTable("BillItems");
                 });
 
             modelBuilder.Entity("POS_Application.Server.Models.Discount", b =>
                 {
                     b.Property<string>("DiscountCode")
-                        .HasColumnType("varchar(255)");
+                        .HasMaxLength(20)
+                        .HasColumnType("varchar(20)");
 
                     b.Property<string>("BillId")
-                        .IsRequired()
                         .HasColumnType("varchar(10)");
 
                     b.Property<decimal>("DiscountPercentage")
-                        .HasColumnType("decimal(5, 2)");
+                        .HasColumnType("decimal(65,30)");
 
                     b.HasKey("DiscountCode");
 
@@ -99,21 +111,19 @@ namespace POS_Application.Server.Migrations
                     b.Property<string>("IngredientId")
                         .HasColumnType("varchar(255)");
 
-                    b.Property<string>("ItemId")
-                        .IsRequired()
-                        .HasColumnType("varchar(255)");
+                    b.Property<string>("BillItemItemId")
+                        .HasColumnType("varchar(10)");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("varchar(100)");
+                        .HasColumnType("longtext");
 
                     b.Property<decimal>("Price")
-                        .HasColumnType("decimal(10, 2)");
+                        .HasColumnType("decimal(65,30)");
 
                     b.HasKey("IngredientId");
 
-                    b.HasIndex("ItemId");
+                    b.HasIndex("BillItemItemId");
 
                     b.ToTable("Ingredient");
                 });
@@ -171,35 +181,29 @@ namespace POS_Application.Server.Migrations
 
             modelBuilder.Entity("POS_Application.Server.Models.BillItem", b =>
                 {
-                    b.HasOne("POS_Application.Server.Models.Bill", "Bill")
-                        .WithMany("Items")
+                    b.HasOne("POS_Application.Server.Models.Bill", null)
+                        .WithMany()
                         .HasForeignKey("BillId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Bill");
+                    b.HasOne("POS_Application.Server.Models.Bill", null)
+                        .WithMany("Items")
+                        .HasForeignKey("BillId1");
                 });
 
             modelBuilder.Entity("POS_Application.Server.Models.Discount", b =>
                 {
-                    b.HasOne("POS_Application.Server.Models.Bill", "Bill")
+                    b.HasOne("POS_Application.Server.Models.Bill", null)
                         .WithMany("Discounts")
-                        .HasForeignKey("BillId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Bill");
+                        .HasForeignKey("BillId");
                 });
 
             modelBuilder.Entity("POS_Application.Server.Models.Ingredient", b =>
                 {
-                    b.HasOne("POS_Application.Server.Models.BillItem", "BillItem")
+                    b.HasOne("POS_Application.Server.Models.BillItem", null)
                         .WithMany("Ingredients")
-                        .HasForeignKey("ItemId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("BillItem");
+                        .HasForeignKey("BillItemItemId");
                 });
 
             modelBuilder.Entity("POS_Application.Server.Models.TokenInfo", b =>

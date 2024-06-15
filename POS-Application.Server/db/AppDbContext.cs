@@ -8,6 +8,7 @@ namespace POS_Application.Server.db
     {
         public DbSet<User> Users { get; set; }
         public DbSet<TokenInfo> Tokens { get; set; }
+        public DbSet<Bill> Bills { get; set; }
 
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {
