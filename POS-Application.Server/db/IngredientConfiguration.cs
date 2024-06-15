@@ -15,13 +15,11 @@ namespace POS_Application.Server.db
                 .HasMaxLength(100) // Example: set maximum length for Name property
                 .IsRequired();
 
-            builder.Property(i => i.Price)
-                .HasColumnType("decimal(10, 2)") // Example type configuration for Price
+            builder.Property(i => i.Quantity)
                 .IsRequired();
 
-            builder.HasOne<BillItem>(bi => bi.BillItem) // Assuming Bill is the related entity
-                .WithMany(b => b.Ingredients)
-                .HasForeignKey(bi => bi.ItemId)
+            builder.Property(i => i.Price)
+                .HasColumnType("decimal(10, 2)") // Example type configuration for Price
                 .IsRequired();
         }
     }

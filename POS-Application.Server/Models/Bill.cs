@@ -8,9 +8,9 @@ namespace POS_Application.Server.Models
     {
         public string BillId { get; set; }
         public string CustomerName { get; set; }
-        public List<BillItem> Items { get; set; }
+        public List<LinkedBillItem> Items { get; set; }
         public string Status { get; set; }
-        public List<Discount> Discounts { get; set; }
+        public List<LinkedDiscount> Discounts { get; set; }
         public decimal TipAmount { get; set; }
 
         public decimal CalculateTotalBillAmount()
@@ -40,17 +40,15 @@ namespace POS_Application.Server.Models
         }
     }
 
+    #region Base Related Bill Classes
     public class BillItem
     {
         public string ItemId { get; set; }
-        public string BillId { get; set; }
-        public Bill Bill { get; set; }
         public string ItemName { get; set; }
         public int Quantity { get; set; }
         public decimal BasePrice { get; set; }
-
         public bool IsInStock { get; set; }
-        public List<Ingredient> Ingredients { get; set; }
+        public List<BillItemLinkedIngredient> Ingredients { get; set; }
 
         public decimal CalculateTotalPrice()
         {
@@ -63,23 +61,78 @@ namespace POS_Application.Server.Models
         }
     }
 
+    #region BillItem-linked Class
+    public class BillItemLinkedIngredient
+    {
+        public string IngredientId { get; set; }
+        public string Name { get; set; }
+        public decimal Price { get; set; }
+        public int Quantity { get; set; }
+        public string ItemId { get; set; }
+        public BillItem BillItem { get; set; }
+    }
+    #endregion BillItem-linked Class
+
     public class Discount
     {
+        public string DiscountId { get; set; }
         public string DiscountCode { get; set; }
         public decimal DiscountPercentage { get; set; }
-        public string BillId { get; set; }
-        public Bill Bill { get; set; }
     }
 
     public class Ingredient
     {
         public string IngredientId { get; set; }
         public string Name { get; set; }
+        public int Quantity { get; set; }
         public decimal Price { get; set; }
-
-        public string ItemId { get; set; }
-        public BillItem BillItem { get; set; }
     }
+
+    #endregion Base Related Bill Classes
+
+    #region Bill-linked Classes
+    public class LinkedBillItem
+    {
+        public string ItemId { get; set; }
+        public string ItemName { get; set; }
+        public int Quantity { get; set; }
+        public decimal BasePrice { get; set; }
+        public bool IsInStock { get; set; }
+        public List<LinkedIngredient> Ingredients { get; set; }
+
+        public decimal CalculateTotalPrice()
+        {
+            decimal totalPrice = BasePrice;
+            foreach (var ingredient in Ingredients)
+            {
+                totalPrice += ingredient.Price;
+            }
+            return totalPrice * Quantity;
+        }
+        public string BillId { get; set; }
+        public Bill Bill { get; set; }
+    }
+
+    public class LinkedDiscount
+    {
+        public string DiscountId { get; set; }
+        public string DiscountCode { get; set; }
+        public decimal DiscountPercentage { get; set; }
+        public string BillId { get; set; }
+        public Bill Bill { get; set; }
+    }
+
+    public class LinkedIngredient
+    {
+        public string IngredientId { get; set; }
+        public string Name { get; set; }
+        public decimal Price { get; set; }
+        public int Quantity { get; set; }
+        public string ItemId { get; set; }
+        public LinkedBillItem BillItem { get; set; }
+    }
+
+    #endregion Bill-linked Classes
 
     #endregion Bill Models
 
@@ -96,4 +149,22 @@ namespace POS_Application.Server.Models
         public string OrderStatus { get; set; }
     }
     #endregion StartNewBill
+
+    #region AddItemToBill
+
+    public class AddItemToBillRequest
+    {
+        public string ItemId { get; set; }
+        public int Quantity { get; set; }
+    }
+
+    public class AddItemToBillResponse
+    {
+        public string OrderId { get; set; }
+        public string ItemId { get; set; }
+        public int Quantity { get; set; }
+        public decimal Price { get; set; }
+        public string Status { get; set; }
+    }
+    #endregion AddItemToBill
 }

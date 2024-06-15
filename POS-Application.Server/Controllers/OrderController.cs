@@ -29,6 +29,25 @@ namespace POS_Application.Server.Controllers
             return Ok(new { orderId, Status = "New" });
         }
 
+        [HttpPost("{orderId}/items")]
+        public async Task<IActionResult> AddItemToBill(string orderId, [FromBody] AddItemToBillRequest request)
+        {
+            string token = Request.Headers.Authorization;
+            if (!await _authenticationService.JwtCheck(token))
+            {
+                return BadRequest("Token missing or invalid in request headers.");
+            }
+
+            try
+            {
+                var result = await _orderService.AddItemToBillAsync(orderId, request);
+                return Ok(result);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
         /*
         [HttpPost("{orderId}/items")]
         public async Task<IActionResult> AddItemToBill(string orderId, [FromBody] BillItem item)

@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using POS_Application.Server.db;
 
@@ -10,9 +11,11 @@ using POS_Application.Server.db;
 namespace POS_Application.Server.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240615135853_Billv6")]
+    partial class Billv6
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -54,6 +57,10 @@ namespace POS_Application.Server.Migrations
                     b.Property<decimal>("BasePrice")
                         .HasColumnType("decimal(18, 2)");
 
+                    b.Property<string>("BillId")
+                        .IsRequired()
+                        .HasColumnType("varchar(10)");
+
                     b.Property<bool>("IsInStock")
                         .HasColumnType("tinyint(1)");
 
@@ -66,49 +73,26 @@ namespace POS_Application.Server.Migrations
 
                     b.HasKey("ItemId");
 
+                    b.HasIndex("BillId");
+
                     b.ToTable("BaseBillItems");
-                });
-
-            modelBuilder.Entity("POS_Application.Server.Models.BillItemLinkedIngredient", b =>
-                {
-                    b.Property<string>("IngredientId")
-                        .HasColumnType("varchar(255)");
-
-                    b.Property<string>("ItemId")
-                        .IsRequired()
-                        .HasColumnType("varchar(255)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("varchar(100)");
-
-                    b.Property<decimal>("Price")
-                        .HasColumnType("decimal(10, 2)");
-
-                    b.Property<int>("Quantity")
-                        .HasColumnType("int");
-
-                    b.HasKey("IngredientId");
-
-                    b.HasIndex("ItemId");
-
-                    b.ToTable("BillItemLinkedIngredients", (string)null);
                 });
 
             modelBuilder.Entity("POS_Application.Server.Models.Discount", b =>
                 {
-                    b.Property<string>("DiscountId")
+                    b.Property<string>("DiscountCode")
                         .HasColumnType("varchar(255)");
 
-                    b.Property<string>("DiscountCode")
+                    b.Property<string>("BillId")
                         .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasColumnType("varchar(10)");
 
                     b.Property<decimal>("DiscountPercentage")
                         .HasColumnType("decimal(5, 2)");
 
-                    b.HasKey("DiscountId");
+                    b.HasKey("DiscountCode");
+
+                    b.HasIndex("BillId");
 
                     b.ToTable("BaseDiscounts");
                 });
@@ -118,79 +102,6 @@ namespace POS_Application.Server.Migrations
                     b.Property<string>("IngredientId")
                         .HasColumnType("varchar(255)");
 
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("varchar(100)");
-
-                    b.Property<decimal>("Price")
-                        .HasColumnType("decimal(10, 2)");
-
-                    b.Property<int>("Quantity")
-                        .HasColumnType("int");
-
-                    b.HasKey("IngredientId");
-
-                    b.ToTable("BaseIngredients");
-                });
-
-            modelBuilder.Entity("POS_Application.Server.Models.LinkedBillItem", b =>
-                {
-                    b.Property<string>("ItemId")
-                        .HasColumnType("varchar(255)");
-
-                    b.Property<decimal>("BasePrice")
-                        .HasColumnType("decimal(18, 2)");
-
-                    b.Property<string>("BillId")
-                        .IsRequired()
-                        .HasColumnType("varchar(10)");
-
-                    b.Property<bool>("IsInStock")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<string>("ItemName")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<int>("Quantity")
-                        .HasColumnType("int");
-
-                    b.HasKey("ItemId");
-
-                    b.HasIndex("BillId");
-
-                    b.ToTable("BillLinkedBillItems", (string)null);
-                });
-
-            modelBuilder.Entity("POS_Application.Server.Models.LinkedDiscount", b =>
-                {
-                    b.Property<string>("DiscountId")
-                        .HasColumnType("varchar(255)");
-
-                    b.Property<string>("BillId")
-                        .IsRequired()
-                        .HasColumnType("varchar(10)");
-
-                    b.Property<string>("DiscountCode")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<decimal>("DiscountPercentage")
-                        .HasColumnType("decimal(5, 2)");
-
-                    b.HasKey("DiscountId");
-
-                    b.HasIndex("BillId");
-
-                    b.ToTable("BillLinkedDiscounts", (string)null);
-                });
-
-            modelBuilder.Entity("POS_Application.Server.Models.LinkedIngredient", b =>
-                {
-                    b.Property<string>("IngredientId")
-                        .HasColumnType("varchar(255)");
-
                     b.Property<string>("ItemId")
                         .IsRequired()
                         .HasColumnType("varchar(255)");
@@ -202,15 +113,12 @@ namespace POS_Application.Server.Migrations
 
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(10, 2)");
-
-                    b.Property<int>("Quantity")
-                        .HasColumnType("int");
 
                     b.HasKey("IngredientId");
 
                     b.HasIndex("ItemId");
 
-                    b.ToTable("BillLinkedIngredients", (string)null);
+                    b.ToTable("BaseIngredients");
                 });
 
             modelBuilder.Entity("POS_Application.Server.Models.TokenInfo", b =>
@@ -264,18 +172,7 @@ namespace POS_Application.Server.Migrations
                     b.ToTable("Users", (string)null);
                 });
 
-            modelBuilder.Entity("POS_Application.Server.Models.BillItemLinkedIngredient", b =>
-                {
-                    b.HasOne("POS_Application.Server.Models.BillItem", "BillItem")
-                        .WithMany("Ingredients")
-                        .HasForeignKey("ItemId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("BillItem");
-                });
-
-            modelBuilder.Entity("POS_Application.Server.Models.LinkedBillItem", b =>
+            modelBuilder.Entity("POS_Application.Server.Models.BillItem", b =>
                 {
                     b.HasOne("POS_Application.Server.Models.Bill", "Bill")
                         .WithMany("Items")
@@ -286,7 +183,7 @@ namespace POS_Application.Server.Migrations
                     b.Navigation("Bill");
                 });
 
-            modelBuilder.Entity("POS_Application.Server.Models.LinkedDiscount", b =>
+            modelBuilder.Entity("POS_Application.Server.Models.Discount", b =>
                 {
                     b.HasOne("POS_Application.Server.Models.Bill", "Bill")
                         .WithMany("Discounts")
@@ -297,9 +194,9 @@ namespace POS_Application.Server.Migrations
                     b.Navigation("Bill");
                 });
 
-            modelBuilder.Entity("POS_Application.Server.Models.LinkedIngredient", b =>
+            modelBuilder.Entity("POS_Application.Server.Models.Ingredient", b =>
                 {
-                    b.HasOne("POS_Application.Server.Models.LinkedBillItem", "BillItem")
+                    b.HasOne("POS_Application.Server.Models.BillItem", "BillItem")
                         .WithMany("Ingredients")
                         .HasForeignKey("ItemId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -325,11 +222,6 @@ namespace POS_Application.Server.Migrations
                 });
 
             modelBuilder.Entity("POS_Application.Server.Models.BillItem", b =>
-                {
-                    b.Navigation("Ingredients");
-                });
-
-            modelBuilder.Entity("POS_Application.Server.Models.LinkedBillItem", b =>
                 {
                     b.Navigation("Ingredients");
                 });
