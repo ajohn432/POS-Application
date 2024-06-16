@@ -1,49 +1,58 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import './App.css';
+import axios from 'axios';
 
 function App() {
-    const [forecasts, setForecasts] = useState();
+    const [employeeId, setEmployeeId] = useState('');
+    const [password, setPassword] = useState('');
+    const [message, setMessage] = useState('');
 
-    useEffect(() => {
-        populateWeatherData();
-    }, []);
+    const handleLogin = async (e) => {
+        e.preventDefault();
 
-    const contents = forecasts === undefined
-        ? <p><em>Loading... Please refresh once the ASP.NET backend has started. See <a href="https://aka.ms/jspsintegrationreact">https://aka.ms/jspsintegrationreact</a> for more details.</em></p>
-        : <table className="table table-striped" aria-labelledby="tableLabel">
-            <thead>
-                <tr>
-                    <th>Date</th>
-                    <th>Temp. (C)</th>
-                    <th>Temp. (F)</th>
-                    <th>Summary</th>
-                </tr>
-            </thead>
-            <tbody>
-                {forecasts.map(forecast =>
-                    <tr key={forecast.date}>
-                        <td>{forecast.date}</td>
-                        <td>{forecast.temperatureC}</td>
-                        <td>{forecast.temperatureF}</td>
-                        <td>{forecast.summary}</td>
-                    </tr>
-                )}
-            </tbody>
-        </table>;
+        try {
+            const response = await axios.post('https://localhost:7007/api/auth/login', {
+                employeeId,
+                password
+            });
+
+            if (response.status === 200) {
+                setMessage('Login successful!');
+                // Handle successful login, e.g., store token, redirect, etc.
+                localStorage.setItem('token', response.data.token);
+            }
+        } catch (error) {
+            setMessage('Invalid credentials. Please try again.');
+        }
+    };
 
     return (
-        <div>
-            <h1 id="tableLabel">Weather forecast</h1>
-            <p>This component demonstrates fetching data from the server.</p>
-            {contents}
+        <div className="login-container">
+            <h2>Login</h2>
+            <form onSubmit={handleLogin}>
+                <div>
+                    <label>Employee ID:</label>
+                    <input
+                        type="text"
+                        value={employeeId}
+                        onChange={(e) => setEmployeeId(e.target.value)}
+                        required
+                    />
+                </div>
+                <div>
+                    <label>Password:</label>
+                    <input
+                        type="password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        required
+                    />
+                </div>
+                <button type="submit">Login</button>
+            </form>
+            {message && <p>{message}</p>}
         </div>
     );
-    
-    async function populateWeatherData() {
-        const response = await fetch('weatherforecast');
-        const data = await response.json();
-        setForecasts(data);
-    }
 }
 
 export default App;
