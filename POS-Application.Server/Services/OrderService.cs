@@ -280,6 +280,18 @@ namespace POS_Application.Server.Services
             await _dbContext.SaveChangesAsync();
         }
 
+        public async Task<bool> ChangeTipAmountAsync(string orderId, decimal tipAmount)
+        {
+            var order = await _dbContext.Bills.FirstOrDefaultAsync(o => o.BillId == orderId);
+            if (order != null)
+            {
+                order.TipAmount = tipAmount;
+                await _dbContext.SaveChangesAsync();
+                return true;
+            }
+            return false;
+        }
+
         #region Helpers
         private decimal CalculateTotalCostOfLinkedBillItem(LinkedBillItem linkedBillItem)
         {

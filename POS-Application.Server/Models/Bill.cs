@@ -228,5 +228,32 @@ namespace POS_Application.Server.Models
 
     #endregion ApplyDiscount
 
+    #region ChangeTipAmount
+
+    public class ChangeTipAmountRequest
+    {
+        public decimal TipAmount { get; set; }
+    }
+
+    #endregion ChangeTipAmount
+
     #endregion Order Request/Response Models
+
+    #region Inventory Request/Response Models
+
+    public class AddBaseItemRequest
+    {
+        public string ItemName { get; set; }
+        public decimal BasePrice { get; set; }
+        public List<AddBaseItemIngredients> Ingredients { get; set; }
+    }
+
+    public class AddBaseItemIngredients
+    {
+        public string Name { get; set; }
+        public int Quantity { get; set; }
+        public decimal Price { get; set; }
+    }
+
+    #endregion Inventory Request/Response Models
 }

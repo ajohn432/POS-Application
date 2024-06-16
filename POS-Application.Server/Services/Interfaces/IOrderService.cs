@@ -12,5 +12,6 @@ namespace POS_Application.Server.Services.Interfaces
         public Task<ModifyIngredientResponse> ModifyIngredientOnBillAsync(string orderId, string itemId, string ingredientId, ModifyIngredientRequest request);
         public Task<ApplyDiscountResponse> AddDiscountToBillAsync(string orderId, ApplyDiscountRequest request);
         public Task CancelBillAsync(string orderId);
+        public Task<bool> ChangeTipAmountAsync(string orderId, decimal tipAmount);
     }
 }
