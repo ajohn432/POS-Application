@@ -20,6 +20,11 @@ namespace POS_Application.Server.Services
                 .ToListAsync();
         }
 
+        public async Task<List<Ingredient>> GetAllIngredientsAsync()
+        {
+            return await _dbContext.BaseIngredients.ToListAsync();
+        }
+
         public async Task AddBaseItemAsync(AddBaseItemRequest request)
         {
             //1. Create a new BaseBillItem
@@ -94,6 +99,24 @@ namespace POS_Application.Server.Services
                 return true;
             }
             return false;
+        }
+
+        public async Task<GetItemStockStatusResponse> GetItemStockStatusAsync(string itemId)
+        {
+            var item = await _dbContext.BaseBillItems
+                .AsNoTracking()
+                .FirstOrDefaultAsync(i => i.ItemId == itemId);
+
+            if (item == null)
+            {
+                return null;
+            }
+
+            return new GetItemStockStatusResponse
+            {
+                ItemId = item.ItemId,
+                IsInStock = item.IsInStock
+            };
         }
 
         #region Helpers

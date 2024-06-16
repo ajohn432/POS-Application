@@ -169,7 +169,8 @@ namespace POS_Application.Server.Models
         public string OrderId { get; set; }
         public string ItemId { get; set; }
         public int Quantity { get; set; }
-        public decimal Price { get; set; }
+        public decimal BasePrice { get; set; }
+        public decimal TotalPrice { get; set; }
         public string Status { get; set; }
     }
     #endregion AddItemToBill
@@ -186,7 +187,8 @@ namespace POS_Application.Server.Models
         public string OrderId { get; set; }
         public string ItemId { get; set; }
         public int Quantity { get; set; }
-        public decimal Price { get; set; }
+        public decimal BasePrice { get; set; }
+        public decimal TotalPrice { get; set; }
         public string Status { get; set; }
     }
 
@@ -204,7 +206,8 @@ namespace POS_Application.Server.Models
         public string OrderId { get; set; }
         public string ItemId { get; set; }
         public int Quantity { get; set; }
-        public decimal Price { get; set; }
+        public decimal BasePrice { get; set; }
+        public decimal TotalPrice { get; set; }
         public string Status { get; set; }
     }
 
@@ -237,10 +240,38 @@ namespace POS_Application.Server.Models
 
     #endregion ChangeTipAmount
 
+    #region PayOrder
+
+    public class PayOrderRequest
+    {
+        public string CreditCardNumber { get; set; }
+    }
+
+
+    #endregion PayOrder
+
+    #region OrderAmount
+
+    public class OrderAmountsResponse
+    {
+        public decimal PreDiscountCost { get; set; }
+        public decimal TotalDiscountPercentage { get; set; }
+        public decimal DiscountAmount { get; set; }
+        public decimal BillAfterDiscount { get; set; }
+        public decimal TaxRate { get; set; }
+        public decimal TaxAmount { get; set; }
+        public decimal BillAfterDiscountAndTax { get; set; }
+        public decimal TipAmount { get; set; }
+        public decimal FinalBillAmount { get; set; }
+    }
+
+    #endregion OrderAmount
+
     #endregion Order Request/Response Models
 
     #region Inventory Request/Response Models
 
+    #region AddBaseItem
     public class AddBaseItemRequest
     {
         public string ItemName { get; set; }
@@ -254,6 +285,19 @@ namespace POS_Application.Server.Models
         public int Quantity { get; set; }
         public decimal Price { get; set; }
     }
+
+    #endregion AddBaseItem
+
+    #region GetItemStockStatus
+
+    public class GetItemStockStatusResponse
+    {
+        public string ItemId { get; set; }
+
+        public bool IsInStock { get; set; }
+    }
+
+    #endregion GetItemStockStatus
 
     #endregion Inventory Request/Response Models
 }

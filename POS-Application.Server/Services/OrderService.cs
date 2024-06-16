@@ -89,7 +89,8 @@ namespace POS_Application.Server.Services
                 OrderId = bill.BillId,
                 ItemId = linkedBillItem.ItemId,
                 Quantity = linkedBillItem.Quantity,
-                Price = CalculateTotalCostOfLinkedBillItem(linkedBillItem),
+                BasePrice = linkedBillItem.BasePrice,
+                TotalPrice = CalculateLinkedBillItemCost(linkedBillItem),
                 Status = "Item added to bill successfully."
             };
 
@@ -168,7 +169,8 @@ namespace POS_Application.Server.Services
                 OrderId = orderId,
                 ItemId = itemId,
                 Quantity = itemToModify.Quantity,
-                Price = CalculateTotalCostOfLinkedBillItem(itemToModify),
+                BasePrice = itemToModify.BasePrice,
+                TotalPrice = CalculateLinkedBillItemCost(itemToModify),
                 Status = "Item quantity modified successfully."
             };
 
@@ -208,7 +210,8 @@ namespace POS_Application.Server.Services
                 OrderId = orderId,
                 ItemId = itemId,
                 Quantity = ingredient.Quantity,
-                Price = ingredient.Price * ingredient.Quantity,
+                BasePrice = ingredient.Price,
+                TotalPrice = CalculateLinkedIngredientCost(ingredient),
                 Status = "Ingredient modified successfully."
             };
 
@@ -242,7 +245,7 @@ namespace POS_Application.Server.Services
             //Convert the Discount object to LinkedDiscount
             var linkedDiscount = new LinkedDiscount
             {
-                DiscountId = discount.DiscountId,
+                DiscountId = Utilities.GenerateRandomId(10),
                 DiscountCode = discount.DiscountCode,
                 DiscountPercentage = discount.DiscountPercentage,
                 BillId = bill.BillId
@@ -282,6 +285,8 @@ namespace POS_Application.Server.Services
 
         public async Task<bool> ChangeTipAmountAsync(string orderId, decimal tipAmount)
         {
+            await IsOrderActive(orderId);
+
             var order = await _dbContext.Bills.FirstOrDefaultAsync(o => o.BillId == orderId);
             if (order != null)
             {
@@ -292,8 +297,114 @@ namespace POS_Application.Server.Services
             return false;
         }
 
+        public async Task PayOrderAsync(string orderId, string creditCardNumber)
+        {
+            await IsOrderActive(orderId);
+
+            var order = await _dbContext.Bills.FirstOrDefaultAsync(o => o.BillId == orderId);
+            if (order != null)
+            {
+                order.Status = "Paid";
+                await _dbContext.SaveChangesAsync();
+            }
+        }
+
+        public async Task<decimal> CalculateBillCostAsync(string orderId)
+        {
+            var bill = await _dbContext.Bills
+                .Include(b => b.Items)
+                .ThenInclude(i => i.Ingredients)
+                .FirstOrDefaultAsync(b => b.BillId == orderId);
+
+            if (bill == null)
+            {
+                throw new ArgumentException("Bill not found.");
+            }
+
+            return CalculateBillCost(bill);
+        }
+
+        public async Task<decimal> CalculateLinkedBillItemCostAsync(string itemId)
+        {
+            var item = await _dbContext.BillLinkedBillItems
+                .Include(i => i.Ingredients)
+                .FirstOrDefaultAsync(i => i.ItemId == itemId);
+
+            if (item == null)
+            {
+                throw new ArgumentException("Linked Bill Item not found.");
+            }
+
+            return CalculateLinkedBillItemCost(item);
+        }
+
+        public async Task<decimal> CalculateLinkedIngredientCostAsync(string ingredientId)
+        {
+            var ingredient = await _dbContext.BillLinkedIngredients
+                .FirstOrDefaultAsync(i => i.IngredientId == ingredientId);
+
+            if (ingredient == null)
+            {
+                throw new ArgumentException("Linked Ingredient not found.");
+            }
+
+            return CalculateLinkedIngredientCost(ingredient);
+        }
+
+        public async Task<OrderAmountsResponse> CalculateOrderAmountsAsync(string orderId)
+        {
+            var bill = await _dbContext.Bills
+                .Include(b => b.Items)
+                    .ThenInclude(i => i.Ingredients)
+                .Include(b => b.Discounts)
+                .FirstOrDefaultAsync(b => b.BillId == orderId);
+
+            if (bill == null)
+            {
+                throw new ArgumentException("Bill not found.");
+            }
+
+            decimal preDiscountCost = CalculateBillCost(bill);
+            decimal totalDiscountPercentage = CalculateDiscountPercentage(bill);
+            decimal discountAmount = preDiscountCost * (totalDiscountPercentage / 100);
+            decimal billAfterDiscount = preDiscountCost - discountAmount;
+            decimal taxRate = 7;
+            decimal taxAmount = billAfterDiscount * (taxRate / 100);
+            decimal billAfterDiscountAndTax = billAfterDiscount + taxAmount;
+
+            return new OrderAmountsResponse
+            {
+                PreDiscountCost = preDiscountCost,
+                TotalDiscountPercentage = totalDiscountPercentage,
+                DiscountAmount = discountAmount,
+                BillAfterDiscount = billAfterDiscount,
+                TaxRate = taxRate,
+                TaxAmount = taxAmount,
+                BillAfterDiscountAndTax = billAfterDiscountAndTax,
+                TipAmount = bill.TipAmount,
+                FinalBillAmount = billAfterDiscountAndTax + bill.TipAmount
+            };
+        }
+
         #region Helpers
-        private decimal CalculateTotalCostOfLinkedBillItem(LinkedBillItem linkedBillItem)
+        private decimal CalculateBillCost(Bill bill)
+        {
+            if (bill == null)
+            {
+                throw new Exception("LinkedIngredient not found.");
+            }
+
+            decimal totalPrice = 0;
+
+            foreach (var billItem in bill.Items)
+            {
+                totalPrice += CalculateLinkedBillItemCost(billItem);
+            }
+            
+            return totalPrice;
+        }
+
+        private decimal CalculateLinkedBillItemCost(LinkedBillItem linkedBillItem)
         {
             if (linkedBillItem == null)
             {
@@ -304,13 +415,41 @@ namespace POS_Application.Server.Services
 
             foreach (var ingredient in linkedBillItem.Ingredients)
             {
-                totalPrice += ingredient.Price * ingredient.Quantity;
+                totalPrice += CalculateLinkedIngredientCost(ingredient);
             }
 
             totalPrice *= linkedBillItem.Quantity;
 
             return totalPrice;
         }
+
+        private decimal CalculateLinkedIngredientCost(LinkedIngredient linkedIngredient)
+        {
+            if (linkedIngredient == null)
+            {
+                throw new Exception("LinkedIngredient not found.");
+            }
+
+            return linkedIngredient.Quantity * linkedIngredient.Price;
+        }
+
+        private decimal CalculateDiscountPercentage(Bill bill)
+        {
+            decimal totalDiscountPercentage = 1;
+
+            if (bill.Discounts != null && bill.Discounts.Count > 0)
+            {
+                foreach (var discount in bill.Discounts)
+                {
+                    totalDiscountPercentage *= 1 - (discount.DiscountPercentage / 100);
+                }
+            }
+
+            totalDiscountPercentage = (1 - totalDiscountPercentage) * 100;
+
+            return totalDiscountPercentage;
+        }
+
 
         private async Task IsOrderActive(string orderId)
         {
@@ -321,7 +460,7 @@ namespace POS_Application.Server.Services
             }
             else if (bill.Status != "Active")
             {
-                throw new ArgumentException("Bill no longer Active.");
+                throw new ArgumentException($"Bill is not Active, it is {bill.Status}.");
             }
         }
 

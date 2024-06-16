@@ -17,6 +17,11 @@ namespace POS_Application.Server.Controllers
             _authenticationService = authenticationService;
         }
 
+        /// <summary>
+        /// Authenticates a user and returns a login response with a token.
+        /// </summary>
+        /// <param name="loginRequest">The request containing the user's login credentials.</param>
+        /// <returns>A login response with a token if successful, or an unauthorized status if credentials are invalid.</returns>
         [HttpPost("login")]
         public async Task<IActionResult> LoginAsync([FromBody] LoginRequest loginRequest)
         {
@@ -31,6 +36,10 @@ namespace POS_Application.Server.Controllers
             }
         }
 
+        /// <summary>
+        /// Logs out a user by invalidating their token.
+        /// </summary>
+        /// <returns>A status message indicating success or failure.</returns>
         [HttpPost("logout")]
         public async Task<IActionResult> LogoutAsync()
         {
@@ -43,6 +52,10 @@ namespace POS_Application.Server.Controllers
             return Ok();
         }
 
+        /// <summary>
+        /// Checks the validity of a user's session token.
+        /// </summary>
+        /// <returns>Session information if the token is valid, or a bad request status if the token is invalid or missing.</returns>
         [HttpGet("session")]
         public async Task<IActionResult> CheckSessionAsync()
         {

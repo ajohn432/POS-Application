@@ -13,5 +13,10 @@ namespace POS_Application.Server.Services.Interfaces
         public Task<ApplyDiscountResponse> AddDiscountToBillAsync(string orderId, ApplyDiscountRequest request);
         public Task CancelBillAsync(string orderId);
         public Task<bool> ChangeTipAmountAsync(string orderId, decimal tipAmount);
+        public Task PayOrderAsync(string orderId, string creditCardNumber);
+        public Task<decimal> CalculateBillCostAsync(string orderId);
+        public Task<decimal> CalculateLinkedBillItemCostAsync(string itemId);
+        public Task<decimal> CalculateLinkedIngredientCostAsync(string ingredientId);
+        public Task<OrderAmountsResponse> CalculateOrderAmountsAsync(string orderId);
     }
 }

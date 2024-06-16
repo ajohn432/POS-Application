@@ -17,6 +17,11 @@ namespace POS_Application.Server.Controllers
             _authenticationService = authenticationService;
         }
 
+        /// <summary>
+        /// Starts a new bill.
+        /// </summary>
+        /// <param name="request">The request to start a new bill.</param>
+        /// <returns>A new order ID and status.</returns>
         [HttpPost]
         public async Task<IActionResult> StartNewBill([FromBody] StartNewBillRequest request)
         {
@@ -41,6 +46,12 @@ namespace POS_Application.Server.Controllers
             }
         }
 
+        /// <summary>
+        /// Adds an item to the bill.
+        /// </summary>
+        /// <param name="orderId">The order ID to add the item to.</param>
+        /// <param name="request">The request to add an item to the bill.</param>
+        /// <returns>The updated bill details.</returns>
         [HttpPost("{orderId}/items")]
         public async Task<IActionResult> AddItemToBill(string orderId, [FromBody] AddItemToBillRequest request)
         {
@@ -65,6 +76,12 @@ namespace POS_Application.Server.Controllers
             }
         }
 
+        /// <summary>
+        /// Removes an item from the bill.
+        /// </summary>
+        /// <param name="orderId">The order ID of the bill.</param>
+        /// <param name="itemId">The item ID to remove.</param>
+        /// <returns>A success message or error details.</returns>
         [HttpDelete("{orderId}/items/{itemId}")]
         public async Task<IActionResult> RemoveItemFromBill(string orderId, string itemId)
         {
@@ -89,6 +106,11 @@ namespace POS_Application.Server.Controllers
             }
         }
 
+        /// <summary>
+        /// Gets the bill details by order ID.
+        /// </summary>
+        /// <param name="orderId">The order ID of the bill.</param>
+        /// <returns>The bill details or an error message.</returns>
         [HttpGet("{orderId}")]
         public async Task<IActionResult> GetBillByOrderId(string orderId)
         {
@@ -117,6 +139,13 @@ namespace POS_Application.Server.Controllers
             }
         }
 
+        /// <summary>
+        /// Modifies an item on the bill.
+        /// </summary>
+        /// <param name="orderId">The order ID of the bill.</param>
+        /// <param name="itemId">The item ID to modify.</param>
+        /// <param name="request">The request to modify the item on the bill.</param>
+        /// <returns>The updated item details or error message.</returns>
         [HttpPut("{orderId}/items/{itemId}")]
         public async Task<IActionResult> ModifyItemOnBill(string orderId, string itemId, ModifyItemOnBillRequest request)
         {
@@ -141,6 +170,14 @@ namespace POS_Application.Server.Controllers
             }
         }
 
+        /// <summary>
+        /// Modifies an ingredient on the bill.
+        /// </summary>
+        /// <param name="orderId">The order ID of the bill.</param>
+        /// <param name="itemId">The item ID to which the ingredient belongs.</param>
+        /// <param name="ingredientId">The ingredient ID to modify.</param>
+        /// <param name="request">The request to modify the ingredient on the bill.</param>
+        /// <returns>The updated ingredient details or error message.</returns>
         [HttpPut("{orderId}/items/{itemId}/{ingredientId}")]
         public async Task<IActionResult> ModifyIngredientOnBill(string orderId, string itemId, string ingredientId, [FromBody] ModifyIngredientRequest request)
         {
@@ -165,6 +202,12 @@ namespace POS_Application.Server.Controllers
             }
         }
 
+        /// <summary>
+        /// Adds a discount to the bill.
+        /// </summary>
+        /// <param name="orderId">The order ID of the bill.</param>
+        /// <param name="request">The request to apply the discount.</param>
+        /// <returns>The updated bill details or error message.</returns>
         [HttpPost("{orderId}/discount")]
         public async Task<IActionResult> AddDiscountToBill(string orderId, [FromBody] ApplyDiscountRequest request)
         {
@@ -189,6 +232,11 @@ namespace POS_Application.Server.Controllers
             }
         }
 
+        /// <summary>
+        /// Cancels the bill.
+        /// </summary>
+        /// <param name="orderId">The order ID of the bill.</param>
+        /// <returns>A success message or error details.</returns>
         [HttpPut("{orderId}/cancel")]
         public async Task<IActionResult> CancelBill(string orderId)
         {
@@ -213,6 +261,12 @@ namespace POS_Application.Server.Controllers
             }
         }
 
+        /// <summary>
+        /// Changes the tip amount on the bill.
+        /// </summary>
+        /// <param name="orderId">The order ID of the bill.</param>
+        /// <param name="request">The request to change the tip amount.</param>
+        /// <returns>A success message or error details.</returns>
         [HttpPut("{orderId}/tip")]
         public async Task<IActionResult> ChangeTipAmount(string orderId, [FromBody] ChangeTipAmountRequest request)
         {
@@ -232,6 +286,153 @@ namespace POS_Application.Server.Controllers
                 }
 
                 return NotFound("Order not found.");
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { Status = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message); // Internal server error
+            }
+        }
+
+        /// <summary>
+        /// Processes the payment for the order.
+        /// </summary>
+        /// <param name="orderId">The order ID to pay for.</param>
+        /// <param name="request">The request to process the payment.</param>
+        /// <returns>A success message or error details.</returns>
+        [HttpPut("{orderId}/pay")]
+        public async Task<IActionResult> PayOrder(string orderId, [FromBody] PayOrderRequest request)
+        {
+            string token = Request.Headers.Authorization;
+
+            if (!await _authenticationService.JwtCheck(token))
+            {
+                return BadRequest("Token missing or invalid in request headers.");
+            }
+
+            try
+            {
+                await _orderService.PayOrderAsync(orderId, request.CreditCardNumber);
+                return Ok("Payment accecpted, order is now considered Paid.");
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { Status = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message); // Internal server error
+            }
+        }
+
+        /// <summary>
+        /// Calculates the total cost of the bill.
+        /// </summary>
+        /// <param name="orderId">The order ID.</param>
+        /// <returns>The total cost of the bill.</returns>
+        [HttpGet("{orderId}/calculate-bill-cost")]
+        public async Task<IActionResult> CalculateBillCost(string orderId)
+        {
+            string token = Request.Headers.Authorization;
+            if (!await _authenticationService.JwtCheck(token))
+            {
+                return BadRequest("Token missing or invalid in request headers.");
+            }
+
+            try
+            {
+                var response = await _orderService.CalculateBillCostAsync(orderId);
+                return Ok(response);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { Status = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message); // Internal server error
+            }
+        }
+
+        /// <summary>
+        /// Calculates the total cost of a linked bill item.
+        /// </summary>
+        /// <param name="itemId">The item ID.</param>
+        /// <returns>The total cost of the linked bill item.</returns>
+        [HttpGet("{itemId}/calculate-item-cost")]
+        public async Task<IActionResult> CalculateLinkedBillItemCost(string itemId)
+        {
+            string token = Request.Headers.Authorization;
+            if (!await _authenticationService.JwtCheck(token))
+            {
+                return BadRequest("Token missing or invalid in request headers.");
+            }
+
+            try
+            {
+                var response = await _orderService.CalculateLinkedBillItemCostAsync(itemId);
+                return Ok(response);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { Status = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message); // Internal server error
+            }
+        }
+
+        /// <summary>
+        /// Calculates the total cost of a linked ingredient.
+        /// </summary>
+        /// <param name="ingredientId">The ingredient ID.</param>
+        /// <returns>The total cost of the linked ingredient.</returns>
+        [HttpGet("{ingredientId}/calculate-ingredient-cost")]
+        public async Task<IActionResult> CalculateLinkedIngredientCost(string ingredientId)
+        {
+            string token = Request.Headers.Authorization;
+            if (!await _authenticationService.JwtCheck(token))
+            {
+                return BadRequest("Token missing or invalid in request headers.");
+            }
+
+            try
+            {
+                var response = await _orderService.CalculateLinkedIngredientCostAsync(ingredientId);
+                return Ok(response);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { Status = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message); // Internal server error
+            }
+        }
+
+        /// <summary>
+        /// Get various amounts related to the order.
+        /// </summary>
+        /// <param name="orderId">The ID of the order.</param>
+        /// <returns>A series of amounts related to the order.</returns>
+        [HttpGet("{orderId}/amounts")]
+        public async Task<IActionResult> GetOrderAmounts(string orderId)
+        {
+            string token = Request.Headers.Authorization;
+            if (!await _authenticationService.JwtCheck(token))
+            {
+                return BadRequest("Token missing or invalid in request headers.");
+            }
+
+            try
+            {
+                var amounts = await _orderService.CalculateOrderAmountsAsync(orderId);
+                return Ok(amounts);
             }
             catch (ArgumentException ex)
             {

@@ -8,13 +8,13 @@ using POS_Application.Server.Services;
 using POS_Application.Server.Services.Interfaces;
 using Microsoft.OpenApi.Models;
 using System.Text.Json.Serialization;
+using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddTransient<IAuthenticationService, AuthenticationService>();
 builder.Services.AddTransient<IOrderService, OrderService>();
-builder.Services.AddTransient<IPaymentService, PaymentService>();
 builder.Services.AddTransient<IInventoryService, InventoryService>();
 
 builder.Services.AddControllers()
@@ -53,6 +53,11 @@ builder.Services.AddAuthentication(options =>
 builder.Services.AddSwaggerGen(options =>
 {
     options.SwaggerDoc("v1", new OpenApiInfo { Title = "Your API", Version = "v1" });
+
+    // Set the comments path for the Swagger JSON and UI.
+    var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+    var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+    options.IncludeXmlComments(xmlPath);
 
     // Define JWT security scheme
     options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
