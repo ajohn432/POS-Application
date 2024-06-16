@@ -212,5 +212,35 @@ namespace POS_Application.Server.Controllers
                 return StatusCode(500, ex.Message); // Internal server error
             }
         }
+
+        [HttpPut("{orderId}/tip")]
+        public async Task<IActionResult> ChangeTipAmount(string orderId, [FromBody] ChangeTipAmountRequest request)
+        {
+            string token = Request.Headers.Authorization;
+
+            if (!await _authenticationService.JwtCheck(token))
+            {
+                return BadRequest("Token missing or invalid in request headers.");
+            }
+
+            try
+            {
+                var result = await _orderService.ChangeTipAmountAsync(orderId, request.TipAmount);
+                if (result)
+                {
+                    return Ok("Tip amount updated successfully.");
+                }
+
+                return NotFound("Order not found.");
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { Status = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message); // Internal server error
+            }
+        }
     }
 }

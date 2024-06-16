@@ -4,6 +4,12 @@ namespace POS_Application.Server.Services.Interfaces
 {
     public interface IInventoryService
     {
-        Task<List<BillItem>> GetAllBillItemsWithIngredientsAsync();
+        public Task<List<BillItem>> GetAllBillItemsWithIngredientsAsync();
+        public Task AddBaseItemAsync(AddBaseItemRequest request);
+        public Task<bool> MarkItemInStockAsync(string itemId);
+        public Task<bool> MarkItemOutOfStockAsync(string itemId);
+
+        //Helpers
+        public Task<bool> IsCurrentEmployeeManagerAsync(string token);
     }
 }
