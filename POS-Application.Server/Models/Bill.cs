@@ -140,6 +140,8 @@ namespace POS_Application.Server.Models
 
     #endregion Bill Models
 
+    #region Order Request/Response Models
+
     #region StartNewBill
 
     public class StartNewBillRequest
@@ -225,4 +227,6 @@ namespace POS_Application.Server.Models
     }
 
     #endregion ApplyDiscount
+
+    #endregion Order Request/Response Models
 }
