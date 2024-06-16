@@ -88,6 +88,10 @@ namespace POS_Application.Server.Services
             {
                 return false;
             }
+            if (token.StartsWith("Bearer "))
+            {
+                token = token.Substring(7);
+            }
             var tokenInfo = await _dbContext.Tokens.FirstOrDefaultAsync(t => t.Token == token);
 
             if (tokenInfo == null || !tokenInfo.IsValid)
