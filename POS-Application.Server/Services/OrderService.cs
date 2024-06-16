@@ -21,7 +21,7 @@ namespace POS_Application.Server.Services
                 BillId = Utilities.GenerateRandomId(10),
                 CustomerName = request.CustomerName,
                 Items = new(),
-                Status = "New",
+                Status = "Active",
                 Discounts = new(),
                 TipAmount = 0
             };
@@ -40,28 +40,25 @@ namespace POS_Application.Server.Services
 
         public async Task<AddItemToBillResponse> AddItemToBillAsync(string orderId, AddItemToBillRequest request)
         {
-            // Fetch the bill from the database
+            await IsOrderActive(orderId);
+
+            //Fetch the bill from the database
             var bill = await _dbContext.Bills
                 .Include(b => b.Items)
+                    .ThenInclude(i => i.Ingredients)
                 .FirstOrDefaultAsync(b => b.BillId == orderId);
 
-            if (bill == null)
-            {
-                // Handle the case where the bill is not found
-                throw new ArgumentException("Bill not found.");
-            }
-
-            // Fetch the item details from the database based on the itemId in the request
+            //Fetch the item details from the database based on the itemId in the request
             var item = await _dbContext.BaseBillItems
                 .Include(i => i.Ingredients)
                 .FirstOrDefaultAsync(i => i.ItemId == request.ItemId);
             if (item == null)
             {
-                // Handle the case where the item is not found
+                //Handle the case where the item is not found
                 throw new ArgumentException("Item not found.");
             }
 
-            // Create a new LinkedBillItem and add it to the bill
+            //Create a new LinkedBillItem and add it to the bill
             var linkedBillItem = new LinkedBillItem
             {
                 ItemId = Utilities.GenerateRandomId(10),
@@ -83,10 +80,10 @@ namespace POS_Application.Server.Services
             bill.Items.Add(linkedBillItem);
 
 
-            // Save changes to the database
+            //Save changes to the database
             await _dbContext.SaveChangesAsync();
 
-            // Prepare the response
+            //Prepare the response
             var response = new AddItemToBillResponse
             {
                 OrderId = bill.BillId,
@@ -99,30 +96,191 @@ namespace POS_Application.Server.Services
             return response;
         }
 
-        private async Task<decimal> CalculateTotalCostOfLinkedBillItemAsync(string itemId)
+        public async Task RemoveItemFromBillAsync(string orderId, string itemId)
         {
-            var linkedBillItem = await _dbContext.BillLinkedBillItems
-                .Include(i => i.Ingredients)
-                .FirstOrDefaultAsync(i => i.ItemId == itemId);
+            await IsOrderActive(orderId);
 
-            if (linkedBillItem == null)
+            //Fetch the bill from the database
+            var bill = await _dbContext.Bills
+                .Include(b => b.Items)
+                    .ThenInclude(i => i.Ingredients)
+                .FirstOrDefaultAsync(b => b.BillId == orderId);
+
+            //Find the item in the bill
+            var item = bill.Items.FirstOrDefault(i => i.ItemId == itemId);
+            if (item == null)
             {
-                throw new Exception("LinkedBillItem not found.");
+                //Handle the case where the item is not found
+                throw new ArgumentException("Item not found in the bill.");
             }
 
-            decimal totalPrice = linkedBillItem.BasePrice;
+            //Remove the item from the bill
+            bill.Items.Remove(item);
 
-            foreach (var ingredient in linkedBillItem.Ingredients)
-            {
-                totalPrice += ingredient.Price * ingredient.Quantity;
-            }
-
-            totalPrice *= linkedBillItem.Quantity;
-
-            return totalPrice;
+            //Save changes to the database
+            await _dbContext.SaveChangesAsync();
         }
 
-        //Prefer this as it makes no calls to the db
+        public async Task<Bill> GetBillByOrderIdAsync(string orderId)
+        {
+            //Fetch the bill from the database
+            var bill = await _dbContext.Bills
+                .Include(b => b.Items)
+                    .ThenInclude(i => i.Ingredients)
+                .Include(b => b.Discounts)
+                .FirstOrDefaultAsync(b => b.BillId == orderId);
+
+            if (bill == null)
+            {
+                throw new ArgumentException("Bill not found.");
+            }
+
+            return bill;
+        }
+
+        public async Task<ModifyItemOnBillResponse> ModifyItemOnBillAsync(string orderId, string itemId, ModifyItemOnBillRequest request)
+        {
+            await IsOrderActive(orderId);
+
+            //Fetch the bill from the database
+            var bill = await _dbContext.Bills
+                .Include(b => b.Items)
+                    .ThenInclude(i => i.Ingredients)
+                .FirstOrDefaultAsync(b => b.BillId == orderId);
+
+            //Find the item to modify in the bill's items
+            var itemToModify = bill.Items.FirstOrDefault(i => i.ItemId == itemId);
+            if (itemToModify == null)
+            {
+                // Handle the case where the item is not found in the bill
+                throw new ArgumentException("Item not found in the bill.");
+            }
+
+            //Update the quantity of the item
+            itemToModify.Quantity = request.Quantity;
+
+            //Save changes to the database
+            await _dbContext.SaveChangesAsync();
+
+            //Prepare the response
+            var response = new ModifyItemOnBillResponse
+            {
+                OrderId = orderId,
+                ItemId = itemId,
+                Quantity = itemToModify.Quantity,
+                Price = CalculateTotalCostOfLinkedBillItem(itemToModify),
+                Status = "Item quantity modified successfully."
+            };
+
+            return response;
+        }
+
+        public async Task<ModifyIngredientResponse> ModifyIngredientOnBillAsync(string orderId, string itemId, string ingredientId, ModifyIngredientRequest request)
+        {
+            await IsOrderActive(orderId);
+
+            var bill = await _dbContext.Bills
+                .Include(b => b.Items)
+                    .ThenInclude(i => i.Ingredients)
+                .FirstOrDefaultAsync(b => b.BillId == orderId);
+
+            var item = bill.Items.FirstOrDefault(i => i.ItemId == itemId);
+            if (item == null)
+            {
+                throw new ArgumentException("Item not found.");
+            }
+
+            var ingredient = item.Ingredients.FirstOrDefault(ing => ing.IngredientId == ingredientId);
+            if (ingredient == null)
+            {
+                throw new ArgumentException("Ingredient not found.");
+            }
+
+            //Update the ingredient quantity
+            ingredient.Quantity = request.Quantity;
+
+            //Save changes to the database
+            await _dbContext.SaveChangesAsync();
+
+            //Prepare the response
+            var response = new ModifyIngredientResponse
+            {
+                OrderId = orderId,
+                ItemId = itemId,
+                Quantity = ingredient.Quantity,
+                Price = ingredient.Price * ingredient.Quantity,
+                Status = "Ingredient modified successfully."
+            };
+
+            return response;
+        }
+
+        public async Task<ApplyDiscountResponse> AddDiscountToBillAsync(string orderId, ApplyDiscountRequest request)
+        {
+            await IsOrderActive(orderId);
+
+            //Fetch the bill from the database
+            var bill = await _dbContext.Bills
+                .Include(b => b.Items)
+                .Include(b => b.Discounts) //Include the Discounts navigation property
+                .FirstOrDefaultAsync(b => b.BillId == orderId);
+
+            //Fetch discount details based on the discount code.
+            var discount = await _dbContext.BaseDiscounts.FirstOrDefaultAsync(d => d.DiscountCode == request.DiscountCode);
+            if (discount == null)
+            {
+                throw new ArgumentException("Invalid discount code.");
+            }
+
+            //Check if the discount is already applied
+            var existingDiscount = bill.Discounts.FirstOrDefault(d => d.DiscountCode == request.DiscountCode);
+            if (existingDiscount != null)
+            {
+                throw new InvalidOperationException("This discount is already applied to the bill.");
+            }
+
+            //Convert the Discount object to LinkedDiscount
+            var linkedDiscount = new LinkedDiscount
+            {
+                DiscountId = discount.DiscountId,
+                DiscountCode = discount.DiscountCode,
+                DiscountPercentage = discount.DiscountPercentage,
+                BillId = bill.BillId
+            };
+
+            //Apply the discount to the bill
+            bill.Discounts.Add(linkedDiscount);
+
+            //Save changes to the database
+            await _dbContext.SaveChangesAsync();
+
+            //Prepare the response
+            var response = new ApplyDiscountResponse
+            {
+                OrderId = bill.BillId,
+                DiscountCode = request.DiscountCode,
+                DiscountPercentage = discount.DiscountPercentage,
+                Status = bill.Status
+            };
+
+            return response;
+        }
+
+        public async Task CancelBillAsync(string orderId)
+        {
+            await IsOrderActive(orderId);
+
+            var bill = await _dbContext.Bills.FirstOrDefaultAsync(b => b.BillId == orderId);
+            if (bill == null)
+            {
+                throw new ArgumentException("Bill not found.");
+            }
+
+            bill.Status = "Cancelled";
+            await _dbContext.SaveChangesAsync();
+        }
+
+        #region Helpers
         private decimal CalculateTotalCostOfLinkedBillItem(LinkedBillItem linkedBillItem)
         {
             if (linkedBillItem == null)
@@ -141,5 +299,20 @@ namespace POS_Application.Server.Services
 
             return totalPrice;
         }
+
+        private async Task IsOrderActive(string orderId)
+        {
+            var bill = await _dbContext.Bills.FirstOrDefaultAsync(o => o.BillId == orderId);
+            if (bill == null)
+            {
+                throw new ArgumentException("Bill not found.");
+            }
+            else if (bill.Status != "Active")
+            {
+                throw new ArgumentException("Bill no longer Active.");
+            }
+        }
+
+        #endregion Helpers
     }
 }
