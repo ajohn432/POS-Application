@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace POS_Application.Server.Models
 {
@@ -69,6 +70,7 @@ namespace POS_Application.Server.Models
         public decimal Price { get; set; }
         public int Quantity { get; set; }
         public string ItemId { get; set; }
+        [JsonIgnore]
         public BillItem BillItem { get; set; }
     }
     #endregion BillItem-linked Class
@@ -110,6 +112,7 @@ namespace POS_Application.Server.Models
             return totalPrice * Quantity;
         }
         public string BillId { get; set; }
+        [JsonIgnore]
         public Bill Bill { get; set; }
     }
 
@@ -129,6 +132,7 @@ namespace POS_Application.Server.Models
         public decimal Price { get; set; }
         public int Quantity { get; set; }
         public string ItemId { get; set; }
+        [JsonIgnore]
         public LinkedBillItem BillItem { get; set; }
     }
 
@@ -167,4 +171,58 @@ namespace POS_Application.Server.Models
         public string Status { get; set; }
     }
     #endregion AddItemToBill
+
+    #region ModifyItemOnBill
+
+    public class ModifyItemOnBillRequest
+    {
+        public int Quantity { get; set; }
+    }
+
+    public class ModifyItemOnBillResponse
+    {
+        public string OrderId { get; set; }
+        public string ItemId { get; set; }
+        public int Quantity { get; set; }
+        public decimal Price { get; set; }
+        public string Status { get; set; }
+    }
+
+    #endregion ModifyItemOnBill
+
+    #region ModifyIngredient
+
+    public class ModifyIngredientRequest
+    {
+        public int Quantity { get; set; }
+    }
+
+    public class ModifyIngredientResponse
+    {
+        public string OrderId { get; set; }
+        public string ItemId { get; set; }
+        public int Quantity { get; set; }
+        public decimal Price { get; set; }
+        public string Status { get; set; }
+    }
+
+
+    #endregion ModifyIngredient
+
+    #region ApplyDiscount
+
+    public class ApplyDiscountRequest
+    {
+        public string DiscountCode { get; set; }
+    }
+
+    public class ApplyDiscountResponse
+    {
+        public string OrderId { get; set; }
+        public string DiscountCode { get; set; }
+        public decimal DiscountPercentage { get; set; }
+        public string Status { get; set; }
+    }
+
+    #endregion ApplyDiscount
 }

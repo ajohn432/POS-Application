@@ -24,8 +24,6 @@ namespace POS_Application.Server.db
 
         protected override void OnModelCreating(ModelBuilder modelBuilder) 
         {
-            //modelBuilder.ApplyConfiguration(new UserConfiguration());
-            //modelBuilder.ApplyConfiguration(new TokenConfiguration());
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
         }
     }
