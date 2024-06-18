@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "/Users/matthewlewis/erikabranch/POS-Application/POS-Application.Server/POS-Application.Server.csproj": {}
+    "/Users/erikasudderth/Desktop/POS-Project/POS-Application/POS-Application.Server/POS-Application.Server.csproj": {}
   },
   "projects": {
-    "/Users/matthewlewis/erikabranch/POS-Application/POS-Application.Server/POS-Application.Server.csproj": {
+    "/Users/erikasudderth/Desktop/POS-Project/POS-Application/POS-Application.Server/POS-Application.Server.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/matthewlewis/erikabranch/POS-Application/POS-Application.Server/POS-Application.Server.csproj",
+        "projectUniqueName": "/Users/erikasudderth/Desktop/POS-Project/POS-Application/POS-Application.Server/POS-Application.Server.csproj",
         "projectName": "POS-Application.Server",
-        "projectPath": "/Users/matthewlewis/erikabranch/POS-Application/POS-Application.Server/POS-Application.Server.csproj",
-        "packagesPath": "/Users/matthewlewis/.nuget/packages/",
-        "outputPath": "/Users/matthewlewis/erikabranch/POS-Application/POS-Application.Server/obj/",
+        "projectPath": "/Users/erikasudderth/Desktop/POS-Project/POS-Application/POS-Application.Server/POS-Application.Server.csproj",
+        "packagesPath": "/Users/erikasudderth/.nuget/packages/",
+        "outputPath": "/Users/erikasudderth/Desktop/POS-Project/POS-Application/POS-Application.Server/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "/Users/matthewlewis/.nuget/NuGet/NuGet.Config"
+          "/Users/erikasudderth/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net8.0"

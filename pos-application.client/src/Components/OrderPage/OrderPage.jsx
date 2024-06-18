@@ -1,18 +1,20 @@
 import OrderIdentifier from "../OrderIdentifier/OrderIdentifier";
 import OrderPageItem from "../OrderPageItem/OrderPageItem";
+import OrderTotal from "../OrderTotal/OrderTotal.jsx";
+import StartOrderForm from "../StartOrderForm/StartOrderForm.jsx";
+import "./OrderPage.css";
 
 function OrderPage() {
   let orderId = 1;
   let orderName = "Erika";
 
   return (
-    <div>
-      <OrderIdentifier />
+    <div className="orderPageDiv">
+      <h1 className="orderH1">Order</h1>
+      <StartOrderForm />
+      <OrderIdentifier orderName={orderName} />
       <OrderPageItem />
-
-      <h1 className="totalH1">Total</h1>
-      <p>total amount</p>
-      <button>Pay Now</button>
+      <OrderTotal />
     </div>
   );
 }

@@ -1,4 +1,4 @@
-.menuItemList {
+.menu {
   display: grid;
   grid-template-columns: 24% 24% 24% 24%;
   row-gap: 10px;
