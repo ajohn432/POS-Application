@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("POS-Application.Server")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+37cbcf2ce1333d5d64dffb756625b911ed18cbb2")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+47bac5ca0910f56127723317801c34ade6b775aa")]
 [assembly: System.Reflection.AssemblyProductAttribute("POS-Application.Server")]
 [assembly: System.Reflection.AssemblyTitleAttribute("POS-Application.Server")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

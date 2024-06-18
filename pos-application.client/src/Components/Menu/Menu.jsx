@@ -1,13 +1,13 @@
-import MenuItem from "../MenuItem/MenuItem.jsx";
 import axios from "axios";
 import "./Menu.css";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
+import MenuItem from "../MenuItem/MenuItem";
 
 function Menu() {
-  const token =
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJzdHJpbmciLCJqdGkiOiI3MzBmNmJmYy1kNjljLTQyYTYtODBkMy0yNGRhNDA3OTM0M2IiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJNYW5hZ2VyIiwiZXhwIjoxNzE4NTU3Nzg2LCJpc3MiOiJKb2V5ISIsImF1ZCI6IlBPUy1Vc2VycyJ9.TqEN0LIPk5qXFcFcE11GD0VHZEMDtUrelJHBuYy6ZN0";
-
-  const [data, setData] = useState(null);
+  const token = localStorage.getItem('token');
+  const [data, setData] = useState([]);
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -20,20 +20,47 @@ function Menu() {
             }
           }
         );
-        setData(response.data);
+
+        const itemsArray = response.data.$values || [];
+
+        // Kept getting an item that was titled "String"
+        const validItems = itemsArray.filter(item => {
+          return typeof item.itemName === 'string' && item.itemName !== 'string' && typeof item.basePrice === 'number';
+        });
+
+        setData(validItems);
+        setLoading(false);
       } catch (error) {
         console.error("Error fetching data:", error);
+        setError('Error fetching data');
+        setLoading(false);
       }
     };
 
     fetchData();
-  }, []);
+  }, [token]);
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
+
+  const itemsToDisplay = data.slice(0, 8); 
 
   return (
-    <div>
-      {data.$values.map(e => {
-        console.log(e.$id);
-        return <MenuItem name={e.itemName} price={e.basePrice} />;
+    <div className="menu">
+      {itemsToDisplay.length === 0 && <div>No items available</div>}
+      {itemsToDisplay.map(item => {
+        return (
+          <MenuItem
+            key={item.itemId}
+            name={item.itemName}
+            price={item.basePrice}
+          />
+        );
       })}
     </div>
   );

@@ -1,18 +1,18 @@
-import "./MenuItem.css";
+import PropTypes from 'prop-types';
+import './MenuItem.css';
 
-function MenuItem({ name, price, itemId }) {
-  function addMenuItemToOrder() {
-    //Make POST request to add this menu item to order via the itemId
-    //Can add other parameters if needed
-    console.log(`Making POST request to add ${name} to order.`);
-  }
-
+function MenuItem({ name, price }) {
   return (
     <div className="menuItemCard">
-      <h1>Name: {name}</h1>
+      <h1> {name}</h1>
       <h2>Price: {price}</h2>
     </div>
   );
 }
+
+MenuItem.propTypes = {
+  name: PropTypes.string.isRequired,
+  price: PropTypes.number.isRequired
+};
 
 export default MenuItem;

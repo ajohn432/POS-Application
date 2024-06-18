@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import "./App.css";
 import OrderPage from "./Components/OrderPage/OrderPage.jsx";
 import Menu from "./Components/Menu/Menu.jsx";
