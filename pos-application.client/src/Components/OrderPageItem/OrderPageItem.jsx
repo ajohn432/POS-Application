@@ -1,6 +1,7 @@
-import IngredientQuantity from "../IngredientQuantity/IngredientQuantity";
+import Quantity from "../Quantity/Quantity";
+import "./OrderPageItem.css";
 
-function OrderPageItem() {
+function OrderPageItem(item) {
   const item = {
     $id: "2",
     itemId: "0804eae0-2b3b-11ef-8549-0ac6d44bbeb9",
@@ -89,15 +90,23 @@ function OrderPageItem() {
 
   return (
     <div className="orderItem">
-      <p>{item.itemName}</p>
-      {item.ingredients.$values.map(item => {
-        return (
-          <p>
-            {item.name}
-            <IngredientQuantity quantity={item.quantity} />
-          </p>
-        );
-      })}
+      <ul className="orderItemValues">
+        <li className="itemName">{item.itemName}</li>
+        <li className="itemQuantity">
+          <Quantity quantity={item.quantity} />
+        </li>
+        <li className="itemTotalPrice">{item.basePrice * item.quantity}</li>
+      </ul>
+      <ul className="orderIngredients">
+        {item.ingredients.$values.map(ingredient => {
+          return (
+            <li key={ingredient.$id}>
+              <Quantity quantity={ingredient.quantity} />
+              {ingredient.name}
+            </li>
+          );
+        })}
+      </ul>
     </div>
   );
 }

@@ -54,6 +54,8 @@ function Menu() {
 
   const itemsToDisplay = data.slice(0, 8);
 
+  const addToOrder = () => {};
+
   return (
     <div>
       <h1 className="menuHeader">Menu</h1>
@@ -62,6 +64,7 @@ function Menu() {
         {itemsToDisplay.map(item => {
           return (
             <MenuItem
+              onClick={addToOrder}
               key={item.itemId}
               name={item.itemName}
               price={item.basePrice}

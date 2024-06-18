@@ -1,9 +1,10 @@
 function OrderTotal() {
   return (
     <div className="orderTotalDiv">
-      <h1 className="totalH1">Total</h1>
-      <p>total amount</p>
-      <button>Pay Now</button>
+      <p>Subtotal: </p>
+      <p>Discounts: </p>
+      <p>Tax: </p>
+      <p>Total: </p>
     </div>
   );
 }

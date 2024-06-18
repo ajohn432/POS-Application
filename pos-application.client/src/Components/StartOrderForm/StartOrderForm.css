@@ -2,11 +2,6 @@
   text-align: center;
 }
 
-.startOrderForm input,
-.startOrderForm label {
-  display: block;
-}
-
 .startOrderForm input {
   margin: 0 auto;
 }
