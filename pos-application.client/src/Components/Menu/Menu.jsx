@@ -1,10 +1,11 @@
+import PropTypes from "prop-types";
 import axios from "axios";
 import "./Menu.css";
 import { useEffect, useState } from "react";
 import MenuItem from "../MenuItem/MenuItem";
 
-function Menu() {
-  const token = localStorage.getItem('token');
+function Menu({ id, onItemSelected }) {
+  const token = localStorage.getItem("token");
   const [data, setData] = useState([]);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -25,14 +26,18 @@ function Menu() {
 
         // Kept getting an item that was titled "String"
         const validItems = itemsArray.filter(item => {
-          return typeof item.itemName === 'string' && item.itemName !== 'string' && typeof item.basePrice === 'number';
+          return (
+            typeof item.itemName === "string" &&
+            item.itemName !== "string" &&
+            typeof item.basePrice === "number"
+          );
         });
 
         setData(validItems);
         setLoading(false);
       } catch (error) {
         console.error("Error fetching data:", error);
-        setError('Error fetching data');
+        setError("Error fetching data");
         setLoading(false);
       }
     };
@@ -48,22 +53,35 @@ function Menu() {
     return <div>Error: {error}</div>;
   }
 
-  const itemsToDisplay = data.slice(0, 8); 
+  const itemsToDisplay = data.slice(0, 8);
+
+  const addToOrder = (item) => {
+    onItemSelected(item);
+  };
 
   return (
-    <div className="menu">
-      {itemsToDisplay.length === 0 && <div>No items available</div>}
-      {itemsToDisplay.map(item => {
-        return (
-          <MenuItem
-            key={item.itemId}
-            name={item.itemName}
-            price={item.basePrice}
-          />
-        );
-      })}
+    <div>
+      <h1 className="menuHeader">Menu</h1>
+      <div className="menu">
+        {itemsToDisplay.length === 0 && <div>No items available</div>}
+        {itemsToDisplay.map(item => {
+          return (
+            <MenuItem
+              onClick={() => addToOrder(item)}
+              key={item.itemId}
+              name={item.itemName}
+              price={item.basePrice}
+            />
+          );
+        })}
+      </div>
     </div>
   );
 }
+
+Menu.propTypes = {
+  id: PropTypes.string.isRequired,
+  onItemSelected: PropTypes.func.isRequired,
+};
 
 export default Menu;
