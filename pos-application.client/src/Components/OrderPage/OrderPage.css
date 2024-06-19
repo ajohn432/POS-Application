@@ -15,3 +15,16 @@
   list-style: none;
   font-weight: bold;
 }
+
+.cartHeader {
+  padding-left: 50px;
+  padding-right: 150px;
+  font-size: 1.3em;
+  margin-top: 10px;
+}
+
+.cartItem {
+  padding-left: 50px;
+  padding-right: 150px;
+  margin: 5px 0;
+}

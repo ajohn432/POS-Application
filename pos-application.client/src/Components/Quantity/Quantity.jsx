@@ -1,8 +1,13 @@
+import PropTypes from "prop-types";
 import "./Quantity.css";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
-function Quantity({ quantity = 1 }) {
-  const [quantityCount, setQuantityCount] = useState(quantity);
+function Quantity({ quantity, onQuantityChange }) {
+  const [quantityCount, setQuantityCount] = useState(quantity || 1);
+
+  useEffect(() => {
+    onQuantityChange(quantityCount);
+  }, [quantityCount]);
 
   const decreaseCount = () => {
     if (quantityCount > 0) {
@@ -26,5 +31,10 @@ function Quantity({ quantity = 1 }) {
     </span>
   );
 }
+
+Quantity.propTypes = {
+  quantity: PropTypes.number.isRequired,
+  onQuantityChange: PropTypes.func.isRequired,
+};
 
 export default Quantity;

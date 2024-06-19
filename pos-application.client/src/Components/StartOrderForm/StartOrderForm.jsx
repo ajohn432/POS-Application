@@ -25,9 +25,11 @@ function StartOrderForm(props) {
           Authorization: `Bearer ${token}`
         }
       });
-      sendToParent(response.data.orderId.orderId, orderName);
+      const { orderId } = response.data.orderId;
+      console.log('Order ID (extracted):', orderId, 'Type:', typeof orderId);
+      sendToParent(orderId, orderName);
     } catch (error) {
-      console.log(error);
+      console.log('Error in postOrderName:', error);
     }
   };
 

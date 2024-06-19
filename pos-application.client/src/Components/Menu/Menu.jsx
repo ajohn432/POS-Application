@@ -1,10 +1,10 @@
-import PropTypes from "prop-types";
 import axios from "axios";
 import "./Menu.css";
 import { useEffect, useState } from "react";
 import MenuItem from "../MenuItem/MenuItem";
+import PropTypes from "prop-types";
 
-function Menu({ id, onItemSelected }) {
+function Menu({ onItemSelected }) {
   const token = localStorage.getItem("token");
   const [data, setData] = useState([]);
   const [error, setError] = useState(null);
@@ -80,7 +80,6 @@ function Menu({ id, onItemSelected }) {
 }
 
 Menu.propTypes = {
-  id: PropTypes.string.isRequired,
   onItemSelected: PropTypes.func.isRequired,
 };
 
