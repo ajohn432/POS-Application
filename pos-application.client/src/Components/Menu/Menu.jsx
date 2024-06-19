@@ -3,7 +3,7 @@ import "./Menu.css";
 import { useEffect, useState } from "react";
 import MenuItem from "../MenuItem/MenuItem";
 
-function Menu() {
+function Menu({ id }) {
   const token = localStorage.getItem("token");
   const [data, setData] = useState([]);
   const [error, setError] = useState(null);
@@ -54,7 +54,9 @@ function Menu() {
 
   const itemsToDisplay = data.slice(0, 8);
 
-  const addToOrder = () => {};
+  const addToOrder = () => {
+    console.log("Menu Page: " + id);
+  };
 
   return (
     <div>

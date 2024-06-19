@@ -5,13 +5,16 @@ import StartOrderForm from "../StartOrderForm/StartOrderForm.jsx";
 import "./OrderPage.css";
 import { useState } from "react";
 
-function OrderPage() {
+function OrderPage(props) {
+  const { sendToParent } = props;
   const [orderId, setOrderId] = useState("");
   const [orderName, setOrderName] = useState("");
+  const [orderHasStarted, setOrderHasStarted] = useState();
 
   const handleClick = (id, name) => {
     setOrderId(id);
     setOrderName(name);
+    sendToParent(orderId);
   };
 
   return (

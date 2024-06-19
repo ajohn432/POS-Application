@@ -1,7 +1,7 @@
 import Quantity from "../Quantity/Quantity";
 import "./OrderPageItem.css";
 
-function OrderPageItem(item) {
+function OrderPageItem() {
   const item = {
     $id: "2",
     itemId: "0804eae0-2b3b-11ef-8549-0ac6d44bbeb9",
