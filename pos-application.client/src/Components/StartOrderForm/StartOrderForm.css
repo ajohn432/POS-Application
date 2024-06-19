@@ -1,7 +1,16 @@
 .startOrderFormDiv {
+<<<<<<< HEAD
   text-align: center;
 }
 
 .startOrderForm input {
   margin: 0 auto;
 }
+=======
+    text-align: center;
+  }
+  
+  .startOrderForm input {
+    margin: 0 auto;
+  }
+>>>>>>> POS-Auth

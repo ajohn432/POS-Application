@@ -27,4 +27,8 @@ function Quantity({ quantity = 1 }) {
   );
 }
 
+<<<<<<< HEAD
 export default Quantity;
+=======
+export default Quantity;
+>>>>>>> POS-Auth

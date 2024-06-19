@@ -1,3 +1,4 @@
+import PropTypes from "prop-types";
 import OrderIdentifier from "../OrderIdentifier/OrderIdentifier";
 import OrderPageItem from "../OrderPageItem/OrderPageItem";
 import OrderTotal from "../OrderTotal/OrderTotal.jsx";
@@ -6,7 +7,11 @@ import "./OrderPage.css";
 import { useState } from "react";
 
 function OrderPage(props) {
+<<<<<<< HEAD
   const { sendToParent } = props;
+=======
+  const { sendToParent, selectedItem } = props;
+>>>>>>> POS-Auth
   const [orderId, setOrderId] = useState("");
   const [orderName, setOrderName] = useState("");
   const [orderHasStarted, setOrderHasStarted] = useState();
@@ -27,10 +32,19 @@ function OrderPage(props) {
         <li>Quantity</li>
         <li>Price</li>
       </ul>
+<<<<<<< HEAD
       <OrderPageItem />
+=======
+      {selectedItem && <OrderPageItem item={selectedItem} />}
+>>>>>>> POS-Auth
       <OrderTotal />
     </div>
   );
 }
+
+OrderPage.propTypes = {
+  sendToParent: PropTypes.func.isRequired,
+  selectedItem: PropTypes.object,
+};
 
 export default OrderPage;

@@ -1,3 +1,7 @@
+<<<<<<< HEAD
+=======
+import PropTypes from "prop-types";
+>>>>>>> POS-Auth
 import "./StartOrderForm.css";
 import axios from "axios";
 import { useState } from "react";
@@ -39,4 +43,12 @@ function StartOrderForm(props) {
   );
 }
 
+<<<<<<< HEAD
 export default StartOrderForm;
+=======
+StartOrderForm.propTypes = {
+  sendToParent: PropTypes.func.isRequired,
+};
+
+export default StartOrderForm;
+>>>>>>> POS-Auth
