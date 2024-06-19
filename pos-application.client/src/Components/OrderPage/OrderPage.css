@@ -1,5 +1,4 @@
 .orderH1 {
-<<<<<<< HEAD
   text-align: center;
 }
 
@@ -16,21 +15,3 @@
   list-style: none;
   font-weight: bold;
 }
-=======
-    text-align: center;
-  }
-  
-  .orderItemsHeaders {
-    display: flex;
-    justify-content: space-between;
-    padding-left: 50px;
-    padding-right: 150px;
-    margin-bottom: 0px;
-    font-size: 1.5em;
-  }
-  
-  .orderItemsHeaders li {
-    list-style: none;
-    font-weight: bold;
-  }
->>>>>>> POS-Auth

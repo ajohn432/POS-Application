@@ -4,11 +4,7 @@ import "./Menu.css";
 import { useEffect, useState } from "react";
 import MenuItem from "../MenuItem/MenuItem";
 
-<<<<<<< HEAD
-function Menu({ id }) {
-=======
 function Menu({ id, onItemSelected }) {
->>>>>>> POS-Auth
   const token = localStorage.getItem("token");
   const [data, setData] = useState([]);
   const [error, setError] = useState(null);
@@ -59,13 +55,8 @@ function Menu({ id, onItemSelected }) {
 
   const itemsToDisplay = data.slice(0, 8);
 
-<<<<<<< HEAD
-  const addToOrder = () => {
-    console.log("Menu Page: " + id);
-=======
   const addToOrder = (item) => {
     onItemSelected(item);
->>>>>>> POS-Auth
   };
 
   return (
@@ -76,11 +67,7 @@ function Menu({ id, onItemSelected }) {
         {itemsToDisplay.map(item => {
           return (
             <MenuItem
-<<<<<<< HEAD
-              onClick={addToOrder}
-=======
               onClick={() => addToOrder(item)}
->>>>>>> POS-Auth
               key={item.itemId}
               name={item.itemName}
               price={item.basePrice}
@@ -92,13 +79,9 @@ function Menu({ id, onItemSelected }) {
   );
 }
 
-<<<<<<< HEAD
-export default Menu;
-=======
 Menu.propTypes = {
   id: PropTypes.string.isRequired,
   onItemSelected: PropTypes.func.isRequired,
 };
 
 export default Menu;
->>>>>>> POS-Auth
