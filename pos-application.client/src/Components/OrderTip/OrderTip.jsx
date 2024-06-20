@@ -15,7 +15,7 @@ const style = {
   bgcolor: "background.paper",
   border: "2px solid #000",
   boxShadow: 24,
-  p: 4,
+  p: 4
 };
 
 function OrderTip({ onTipChange }) {
@@ -31,7 +31,7 @@ function OrderTip({ onTipChange }) {
   };
 
   return (
-    <div className="tipDiv">
+    <span className="tipDiv">
       <Button onClick={handleOpen}>Tip</Button>
       <Modal
         open={open}
@@ -43,13 +43,17 @@ function OrderTip({ onTipChange }) {
           <Typography id="modal-modal-title" variant="h6" component="h2">
             Enter Tip Amount
           </Typography>
-          <Typography component={"span"} id="modal-modal-description" sx={{ mt: 2 }}>
+          <Typography
+            component={"span"}
+            id="modal-modal-description"
+            sx={{ mt: 2 }}
+          >
             <TextField
               label="Tip Amount"
               variant="outlined"
               type="number"
               value={tipAmount}
-              onChange={(e) => setTipAmount(Number(e.target.value))}
+              onChange={e => setTipAmount(Number(e.target.value))}
               fullWidth
             />
             <Button onClick={handleApplyTip} sx={{ mt: 2 }}>
@@ -58,12 +62,12 @@ function OrderTip({ onTipChange }) {
           </Typography>
         </Box>
       </Modal>
-    </div>
+    </span>
   );
 }
 
 OrderTip.propTypes = {
-  onTipChange: PropTypes.func.isRequired,
+  onTipChange: PropTypes.func.isRequired
 };
 
 export default OrderTip;

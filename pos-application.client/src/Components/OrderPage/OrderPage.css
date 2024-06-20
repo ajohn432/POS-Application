@@ -1,8 +1,30 @@
-.orderH1 {
-  text-align: center;
+.orderPageDiv {
+  border-style: solid;
+  border-width: 2px;
+  border-radius: 10px;
+  border-color: #f0f0f0;
+  background-color: #f0f0f0;
+  margin: 20px 50px 20px 50px;
+  height: auto;
 }
 
-.orderItemsHeaders {
+.orderH1 {
+  text-align: center;
+  font-weight: normal;
+  font-size: 36px;
+  margin-top: 25px;
+  margin-bottom: 0px;
+}
+
+.orderBar {
+  border: none;
+  margin: 0px 40% 10px 40%;
+  height: 1.1px;
+  color: black;
+  background-color: black;
+}
+
+/* .orderItemsHeaders {
   display: flex;
   justify-content: space-between;
   padding-left: 50px;
@@ -21,10 +43,23 @@
   padding-right: 150px;
   font-size: 1.3em;
   margin-top: 10px;
-}
+} */
 
 .cartItem {
-  padding-left: 50px;
-  padding-right: 150px;
+  padding-left: 5%;
+  padding-right: 5%;
   margin: 5px 0;
+}
+
+.totalBar {
+  border: none;
+  margin: 10px 5% 10px 5%;
+  height: 1.1px;
+  color: black;
+  background-color: black;
+}
+
+.orderScroll {
+  overflow: auto;
+  height: 65vh;
 }

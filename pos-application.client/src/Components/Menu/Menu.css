@@ -1,7 +1,36 @@
+.menuDiv {
+  border-style: solid;
+  border-width: 2px;
+  border-radius: 10px;
+  border-color: #f0f0f0;
+  background-color: #464646;
+  height: auto;
+  margin: 20px 50px 20px 50px;
+}
+
 .menu {
   display: grid;
   grid-template-columns: 24% 24% 24% 24%;
   row-gap: 10px;
   grid-gap: 5px;
   grid-auto-rows: 150px;
+  margin-right: 25px;
+  margin-left: 25px;
+}
+
+.menuHeader {
+  text-align: center;
+  color: #f0f0f0;
+  font-weight: normal;
+  font-size: 36px;
+  margin-top: 25px;
+  margin-bottom: 0px;
+}
+
+.menuBar {
+  border: none;
+  margin: 0px 43% 10px 43%;
+  height: 1.1px;
+  color: #f0f0f0;
+  background-color: #f0f0f0;
 }

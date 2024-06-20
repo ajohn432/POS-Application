@@ -4,6 +4,7 @@ import axios from "axios";
 import OrderDiscount from "../OrderDiscount/OrderDiscount.jsx";
 import OrderTip from "../OrderTip/OrderTip.jsx";
 import PayNow from "../PayNow/PayNow.jsx";
+import "./OrderTotal.css";
 
 function OrderTotal({ orderId, cart }) {
   const [amounts, setAmounts] = useState({
@@ -15,7 +16,7 @@ function OrderTotal({ orderId, cart }) {
     taxAmount: 0,
     billAfterDiscountAndTax: 0,
     tipAmount: 0,
-    finalBillAmount: 0,
+    finalBillAmount: 0
   });
   const [subtotal, setSubtotal] = useState(0);
   const [error, setError] = useState(null);
@@ -29,11 +30,11 @@ function OrderTotal({ orderId, cart }) {
         `https://localhost:7007/api/orders/${orderId}/amounts`,
         {
           headers: {
-            Authorization: `Bearer ${token}`,
-          },
+            Authorization: `Bearer ${token}`
+          }
         }
       );
-      console.log('API response:', response);
+      console.log("API response:", response);
       setAmounts(response.data);
       setLoading(false);
     } catch (error) {
@@ -50,8 +51,8 @@ function OrderTotal({ orderId, cart }) {
         `https://localhost:7007/api/orders/${orderId}/calculate-bill-cost`,
         {
           headers: {
-            Authorization: `Bearer ${token}`,
-          },
+            Authorization: `Bearer ${token}`
+          }
         }
       );
       setSubtotal(response.data);
@@ -68,7 +69,7 @@ function OrderTotal({ orderId, cart }) {
     }
   }, [orderId, cart]);
 
-  const handleDiscountChange = async (discountCode) => {
+  const handleDiscountChange = async discountCode => {
     try {
       const token = localStorage.getItem("token");
       await axios.post(
@@ -76,8 +77,8 @@ function OrderTotal({ orderId, cart }) {
         { discountCode },
         {
           headers: {
-            Authorization: `Bearer ${token}`,
-          },
+            Authorization: `Bearer ${token}`
+          }
         }
       );
       await fetchAmounts();
@@ -87,7 +88,7 @@ function OrderTotal({ orderId, cart }) {
     }
   };
 
-  const handleTipChange = async (tipAmount) => {
+  const handleTipChange = async tipAmount => {
     try {
       const token = localStorage.getItem("token");
       await axios.put(
@@ -95,8 +96,8 @@ function OrderTotal({ orderId, cart }) {
         { tipAmount },
         {
           headers: {
-            Authorization: `Bearer ${token}`,
-          },
+            Authorization: `Bearer ${token}`
+          }
         }
       );
       await fetchAmounts();
@@ -107,7 +108,7 @@ function OrderTotal({ orderId, cart }) {
   };
 
   if (!orderId) {
-    return <div>Please start an order.</div>;
+    return <div className="emptyCartMessage">Please start an order.</div>;
   }
 
   if (loading) {
@@ -121,20 +122,27 @@ function OrderTotal({ orderId, cart }) {
   return (
     <div className="orderTotalDiv">
       <p>Subtotal: {subtotal.toFixed(2)}</p>
-      <p>Tax ({amounts.taxRate * 1}%): {amounts.taxAmount.toFixed(2)}</p>
-      <p>Discount ({amounts.totalDiscountPercentage}%): {amounts.discountAmount.toFixed(2)}</p>
+      <p>
+        Tax ({amounts.taxRate * 1}%): {amounts.taxAmount.toFixed(2)}
+      </p>
+      <p>
+        Discount ({amounts.totalDiscountPercentage}%):{" "}
+        {amounts.discountAmount.toFixed(2)}
+      </p>
       <p>Tip: {amounts.tipAmount.toFixed(2)}</p>
       <p>Total: {amounts.finalBillAmount.toFixed(2)}</p>
-      <OrderDiscount onDiscountChange={handleDiscountChange} />
-      <OrderTip onTipChange={handleTipChange} />
-      <PayNow orderId={orderId} total={amounts.finalBillAmount} />
+      <div className="paymentButtons">
+        <OrderDiscount onDiscountChange={handleDiscountChange} />
+        <OrderTip onTipChange={handleTipChange} />
+        <PayNow orderId={orderId} total={amounts.finalBillAmount} />
+      </div>
     </div>
   );
 }
 
 OrderTotal.propTypes = {
   orderId: PropTypes.string.isRequired,
-  cart: PropTypes.array.isRequired,
+  cart: PropTypes.array.isRequired
 };
 
 export default OrderTotal;

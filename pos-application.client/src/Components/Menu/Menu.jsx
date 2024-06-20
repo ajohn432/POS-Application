@@ -55,13 +55,14 @@ function Menu({ onItemSelected }) {
 
   const itemsToDisplay = data.slice(0, 8);
 
-  const addToOrder = (item) => {
+  const addToOrder = item => {
     onItemSelected(item);
   };
 
   return (
-    <div>
+    <div className="menuDiv">
       <h1 className="menuHeader">Menu</h1>
+      <hr className="menuBar"></hr>
       <div className="menu">
         {itemsToDisplay.length === 0 && <div>No items available</div>}
         {itemsToDisplay.map(item => {
@@ -80,7 +81,7 @@ function Menu({ onItemSelected }) {
 }
 
 Menu.propTypes = {
-  onItemSelected: PropTypes.func.isRequired,
+  onItemSelected: PropTypes.func.isRequired
 };
 
 export default Menu;

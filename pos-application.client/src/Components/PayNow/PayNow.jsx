@@ -17,7 +17,7 @@ const style = {
   bgcolor: "background.paper",
   border: "2px solid #000",
   boxShadow: 24,
-  p: 4,
+  p: 4
 };
 
 function PayNow({ orderId = "", total = 0 }) {
@@ -43,8 +43,8 @@ function PayNow({ orderId = "", total = 0 }) {
         {
           headers: {
             Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
+            "Content-Type": "application/json"
+          }
         }
       );
       setPaymentResponse(response.data);
@@ -66,13 +66,13 @@ function PayNow({ orderId = "", total = 0 }) {
         {
           headers: {
             Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
+            "Content-Type": "application/json"
+          }
         }
       );
       setCancelResponse(response.data);
       setTimeout(() => {
-        navigate(0); 
+        navigate(0);
       }, 2000);
     } catch (error) {
       console.error("Error during cancelation:", error);
@@ -81,11 +81,11 @@ function PayNow({ orderId = "", total = 0 }) {
   };
 
   return (
-    <div className="payNowDiv">
-      <Button onClick={handleOpen}>Pay Now</Button>
-      <Button onClick={handleCancelOrder} sx={{ mt: 2 }}>
-        Cancel Order
-      </Button>
+    <span className="payNowDiv">
+      <span>
+        <Button onClick={handleOpen}>Pay Now</Button>
+        <Button onClick={handleCancelOrder}>Cancel Order</Button>
+      </span>
       {cancelResponse && (
         <Typography sx={{ mt: 2 }}>{cancelResponse}</Typography>
       )}
@@ -99,13 +99,17 @@ function PayNow({ orderId = "", total = 0 }) {
           <Typography id="modal-modal-title" variant="h6" component="h2">
             Payment
           </Typography>
-          <Typography component={"span"} id="modal-modal-description" sx={{ mt: 2 }}>
+          <Typography
+            component={"span"}
+            id="modal-modal-description"
+            sx={{ mt: 2 }}
+          >
             <p>Total: {total.toFixed(2)}</p>
             <TextField
               label="Credit Card Number"
               variant="outlined"
               value={creditCardNumber}
-              onChange={(e) => setCreditCardNumber(e.target.value)}
+              onChange={e => setCreditCardNumber(e.target.value)}
               fullWidth
             />
             <Button onClick={handlePayNow} sx={{ mt: 2 }}>
@@ -117,13 +121,13 @@ function PayNow({ orderId = "", total = 0 }) {
           </Typography>
         </Box>
       </Modal>
-    </div>
+    </span>
   );
 }
 
 PayNow.propTypes = {
   orderId: PropTypes.string.isRequired,
-  total: PropTypes.number.isRequired,
+  total: PropTypes.number.isRequired
 };
 
 export default PayNow;

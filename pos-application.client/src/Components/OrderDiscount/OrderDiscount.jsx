@@ -15,7 +15,7 @@ const style = {
   bgcolor: "background.paper",
   border: "2px solid #000",
   boxShadow: 24,
-  p: 4,
+  p: 4
 };
 
 function OrderDiscount({ onDiscountChange }) {
@@ -31,7 +31,7 @@ function OrderDiscount({ onDiscountChange }) {
   };
 
   return (
-    <div className="discountDiv">
+    <span className="discountDiv">
       <Button onClick={handleOpen}>Discounts</Button>
       <Modal
         open={open}
@@ -43,12 +43,16 @@ function OrderDiscount({ onDiscountChange }) {
           <Typography id="modal-modal-title" variant="h6" component="h2">
             Enter Discount Code
           </Typography>
-          <Typography component={"span"} id="modal-modal-description" sx={{ mt: 2 }}>
+          <Typography
+            component={"span"}
+            id="modal-modal-description"
+            sx={{ mt: 2 }}
+          >
             <TextField
               label="Discount Code"
               variant="outlined"
               value={discountCode}
-              onChange={(e) => setDiscountCode(e.target.value)}
+              onChange={e => setDiscountCode(e.target.value)}
               fullWidth
             />
             <Button onClick={handleApplyDiscount} sx={{ mt: 2 }}>
@@ -57,12 +61,12 @@ function OrderDiscount({ onDiscountChange }) {
           </Typography>
         </Box>
       </Modal>
-    </div>
+    </span>
   );
 }
 
 OrderDiscount.propTypes = {
-  onDiscountChange: PropTypes.func.isRequired,
+  onDiscountChange: PropTypes.func.isRequired
 };
 
 export default OrderDiscount;

@@ -12,6 +12,7 @@ function OrderPage(props) {
   const [orderId, setOrderId] = useState("");
   const [orderName, setOrderName] = useState("");
   const [cart, setCart] = useState([]);
+  const [showOrderIdentifier, setShowOrderIdentifier] = useState(false);
 
   const handleClick = (id, name) => {
     setOrderId(id);
@@ -41,44 +42,53 @@ function OrderPage(props) {
     }
   };
 
+  const toggleOrderIdentifier = () => {
+    setShowOrderIdentifier(!showOrderIdentifier);
+  };
+
   return (
     <div className="orderPageDiv">
       <h1 className="orderH1">Order</h1>
-      <StartOrderForm sendToParent={handleClick} />
-      <OrderIdentifier orderName={orderName} />
-      <ul className="orderItemsHeaders">
-        <li>Name</li>
-        <li>Quantity</li>
-        <li>Price</li>
-      </ul>
-      <h2 className="cartHeader">Cart:</h2>
-      {cart.map((cartItem, index) => (
-        <div key={index} className="cartItem">
-          {cartItem.itemName} (
-          {cartItem.ingredients && cartItem.ingredients.length > 0 ? (
-            cartItem.ingredients.map((ingredient, idx) => (
-              <span key={idx}>
-                {ingredient.name} x{ingredient.quantity}
-                {idx < cartItem.ingredients.length - 1 ? ", " : ""}
-              </span>
-            ))
-          ) : (
-            <span>No ingredients</span>
-          )}
-          )
-          <button onClick={() => handleRemoveFromCart(cartItem.itemId)}>
-            Remove
-          </button>
-        </div>
-      ))}
-      {selectedItem && (
-        <OrderPageItem
-          item={selectedItem}
-          orderId={orderId}
-          onAddToCart={handleAddToCart}
+      <hr className="orderBar"></hr>
+      {!showOrderIdentifier && (
+        <StartOrderForm
+          sendToParent={handleClick}
+          handleOrderNameClick={toggleOrderIdentifier}
         />
       )}
-      <OrderTotal orderId={orderId} cart={cart} />
+
+      {showOrderIdentifier && <OrderIdentifier name={orderName} id={orderId} />}
+      <div className="orderScroll">
+        {/* <h2 className="cartHeader">Cart:</h2> */}
+        {cart.map((cartItem, index) => (
+          <div key={index} className="cartItem">
+            {cartItem.itemName} (
+            {cartItem.ingredients && cartItem.ingredients.length > 0 ? (
+              cartItem.ingredients.map((ingredient, idx) => (
+                <span key={idx}>
+                  {ingredient.name} x{ingredient.quantity}
+                  {idx < cartItem.ingredients.length - 1 ? ", " : ""}
+                </span>
+              ))
+            ) : (
+              <span>No ingredients</span>
+            )}
+            )
+            <button onClick={() => handleRemoveFromCart(cartItem.itemId)}>
+              Remove
+            </button>
+          </div>
+        ))}
+        {selectedItem && (
+          <OrderPageItem
+            item={selectedItem}
+            orderId={orderId}
+            onAddToCart={handleAddToCart}
+          />
+        )}
+        <hr className="totalBar"></hr>
+        <OrderTotal orderId={orderId} cart={cart} />
+      </div>
     </div>
   );
 }
