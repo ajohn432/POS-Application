@@ -3,6 +3,8 @@ import OrderIdentifier from "../OrderIdentifier/OrderIdentifier";
 import OrderPageItem from "../OrderPageItem/OrderPageItem";
 import OrderTotal from "../OrderTotal/OrderTotal.jsx";
 import StartOrderForm from "../StartOrderForm/StartOrderForm.jsx";
+import PayNow from "../PayNow/PayNow.jsx";
+import OrderDiscount from "../OrderDiscount/OrderDiscount.jsx";
 import "./OrderPage.css";
 import { useState } from "react";
 import axios from "axios";
@@ -23,18 +25,18 @@ function OrderPage(props) {
     setCart(prevCart => [...prevCart, item]);
   };
 
-  const handleRemoveFromCart = async (itemId) => {
+  const handleRemoveFromCart = async itemId => {
     try {
       const token = localStorage.getItem("token");
       const response = await axios.delete(
         `https://localhost:7007/api/orders/${orderId}/items/${itemId}`,
         {
           headers: {
-            Authorization: `Bearer ${token}`,
-          },
+            Authorization: `Bearer ${token}`
+          }
         }
       );
-      console.log('removing item from order:', response.data);
+      console.log("removing item from order:", response.data);
       setCart(prevCart => prevCart.filter(item => item.itemId !== itemId));
     } catch (error) {
       console.error("Error removing item from order:", error);
@@ -66,7 +68,9 @@ function OrderPage(props) {
             <span>No ingredients</span>
           )}
           )
-          <button onClick={() => handleRemoveFromCart(cartItem.itemId)}>Remove</button>
+          <button onClick={() => handleRemoveFromCart(cartItem.itemId)}>
+            Remove
+          </button>
         </div>
       ))}
       {selectedItem && (
@@ -77,13 +81,15 @@ function OrderPage(props) {
         />
       )}
       <OrderTotal cart={cart} />
+      <OrderDiscount />
+      <PayNow />
     </div>
   );
 }
 
 OrderPage.propTypes = {
   sendToParent: PropTypes.func.isRequired,
-  selectedItem: PropTypes.object,
+  selectedItem: PropTypes.object
 };
 
 export default OrderPage;

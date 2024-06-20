@@ -18,9 +18,14 @@ function App() {
   };
 
   return (
-    <div className="mainContainer">
-      <OrderPage sendToParent={handleClick} selectedItem={selectedItem} />
-      {orderHasStarted && <Menu id={orderId} onItemSelected={handleItemSelected} />}
+    <div className="logoutContainer">
+      <button className="logoutButton">Logout</button>
+      <div className="mainContainer">
+        <OrderPage sendToParent={handleClick} selectedItem={selectedItem} />
+        {orderHasStarted && (
+          <Menu id={orderId} onItemSelected={handleItemSelected} />
+        )}
+      </div>
     </div>
   );
 }
