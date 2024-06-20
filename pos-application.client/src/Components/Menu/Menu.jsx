@@ -55,7 +55,7 @@ function Menu({ onItemSelected }) {
 
   const itemsToDisplay = data.slice(0, 8);
 
-  const addToOrder = item => {
+  const addToOrder = (item) => {
     onItemSelected(item);
   };
 
@@ -80,7 +80,7 @@ function Menu({ onItemSelected }) {
 }
 
 Menu.propTypes = {
-  onItemSelected: PropTypes.func.isRequired
+  onItemSelected: PropTypes.func.isRequired,
 };
 
 export default Menu;

@@ -18,21 +18,21 @@ const style = {
   p: 4,
 };
 
-function OrderDiscount({ onDiscountChange }) {
+function OrderTip({ onTipChange }) {
   const [open, setOpen] = React.useState(false);
-  const [discountCode, setDiscountCode] = React.useState("");
+  const [tipAmount, setTipAmount] = React.useState(0);
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
-  const handleApplyDiscount = () => {
-    onDiscountChange(discountCode);
+  const handleApplyTip = () => {
+    onTipChange(tipAmount);
     handleClose();
   };
 
   return (
-    <div className="discountDiv">
-      <Button onClick={handleOpen}>Discounts</Button>
+    <div className="tipDiv">
+      <Button onClick={handleOpen}>Tip</Button>
       <Modal
         open={open}
         onClose={handleClose}
@@ -41,18 +41,19 @@ function OrderDiscount({ onDiscountChange }) {
       >
         <Box sx={style}>
           <Typography id="modal-modal-title" variant="h6" component="h2">
-            Enter Discount Code
+            Enter Tip Amount
           </Typography>
           <Typography component={"span"} id="modal-modal-description" sx={{ mt: 2 }}>
             <TextField
-              label="Discount Code"
+              label="Tip Amount"
               variant="outlined"
-              value={discountCode}
-              onChange={(e) => setDiscountCode(e.target.value)}
+              type="number"
+              value={tipAmount}
+              onChange={(e) => setTipAmount(Number(e.target.value))}
               fullWidth
             />
-            <Button onClick={handleApplyDiscount} sx={{ mt: 2 }}>
-              Apply Discount
+            <Button onClick={handleApplyTip} sx={{ mt: 2 }}>
+              Apply Tip
             </Button>
           </Typography>
         </Box>
@@ -61,8 +62,8 @@ function OrderDiscount({ onDiscountChange }) {
   );
 }
 
-OrderDiscount.propTypes = {
-  onDiscountChange: PropTypes.func.isRequired,
+OrderTip.propTypes = {
+  onTipChange: PropTypes.func.isRequired,
 };
 
-export default OrderDiscount;
+export default OrderTip;

@@ -3,8 +3,6 @@ import OrderIdentifier from "../OrderIdentifier/OrderIdentifier";
 import OrderPageItem from "../OrderPageItem/OrderPageItem";
 import OrderTotal from "../OrderTotal/OrderTotal.jsx";
 import StartOrderForm from "../StartOrderForm/StartOrderForm.jsx";
-import PayNow from "../PayNow/PayNow.jsx";
-import OrderDiscount from "../OrderDiscount/OrderDiscount.jsx";
 import "./OrderPage.css";
 import { useState } from "react";
 import axios from "axios";
@@ -80,9 +78,7 @@ function OrderPage(props) {
           onAddToCart={handleAddToCart}
         />
       )}
-      <OrderTotal cart={cart} />
-      <OrderDiscount />
-      <PayNow />
+      <OrderTotal orderId={orderId} cart={cart} />
     </div>
   );
 }

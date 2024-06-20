@@ -36,6 +36,10 @@ function OrderPageItem({ item, onAddToCart, orderId }) {
     const itemToAdd = {
       itemId: item.itemId,
       quantity: itemQuantity,
+      ingredients: item.ingredients.$values.map((ingredient, index) => ({
+        ingredientId: ingredient.ingredientId,
+        quantity: ingredientQuantities[index],
+      })),
     };
 
     try {
