@@ -1,9 +1,11 @@
+import  { useEffect, useState } from "react";
 import PropTypes from "prop-types";
-import { useEffect, useState } from "react";
 import axios from "axios";
 import OrderDiscount from "../OrderDiscount/OrderDiscount.jsx";
 import OrderTip from "../OrderTip/OrderTip.jsx";
 import PayNow from "../PayNow/PayNow.jsx";
+import StockModal from "../StockModal/StockModal.jsx";
+import { Button } from "@mui/material";
 import "./OrderTotal.css";
 
 function OrderTotal({ orderId, cart }) {
@@ -21,6 +23,7 @@ function OrderTotal({ orderId, cart }) {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
   const [discountError, setDiscountError] = useState(null);
+  const [stockModalOpen, setStockModalOpen] = useState(false);
 
   const calculateSubtotal = () => {
     return cart.reduce((total, cartItem) => {
@@ -88,7 +91,7 @@ function OrderTotal({ orderId, cart }) {
           }
         }
       );
-      setDiscountError(null); // Clear any previous error message
+      setDiscountError(null);
       await fetchAmounts();
     } catch (error) {
       console.error("Error applying discount:", error);
@@ -113,6 +116,14 @@ function OrderTotal({ orderId, cart }) {
       console.error("Error applying tip:", error);
       setError("Error applying tip");
     }
+  };
+
+  const handleOpenStockModal = () => {
+    setStockModalOpen(true);
+  };
+
+  const handleCloseStockModal = () => {
+    setStockModalOpen(false);
   };
 
   if (!orderId) {
@@ -144,6 +155,8 @@ function OrderTotal({ orderId, cart }) {
         <OrderDiscount onDiscountChange={handleDiscountChange} />
         <OrderTip onTipChange={handleTipChange} />
         <PayNow orderId={orderId} total={amounts.finalBillAmount} />
+        <Button onClick={handleOpenStockModal}>Manage Stock</Button>
+        <StockModal open={stockModalOpen} onClose={handleCloseStockModal} />
       </div>
     </div>
   );

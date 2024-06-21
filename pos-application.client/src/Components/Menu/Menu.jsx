@@ -3,12 +3,15 @@ import "./Menu.css";
 import { useEffect, useState } from "react";
 import MenuItem from "../MenuItem/MenuItem";
 import PropTypes from "prop-types";
+import Snackbar from "@mui/material/Snackbar";
+import Alert from "@mui/material/Alert";
 
 function Menu({ onItemSelected }) {
   const token = localStorage.getItem("token");
   const [data, setData] = useState([]);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -45,6 +48,18 @@ function Menu({ onItemSelected }) {
     fetchData();
   }, [token]);
 
+  const handleSnackbarClose = () => {
+    setSnackbarOpen(false);
+  };
+
+  const handleItemClick = item => {
+    if (item.isInStock) {
+      onItemSelected(item);
+    } else {
+      setSnackbarOpen(true);
+    }
+  };
+
   if (loading) {
     return <div>Loading...</div>;
   }
@@ -55,10 +70,6 @@ function Menu({ onItemSelected }) {
 
   const itemsToDisplay = data.slice(0, 12);
 
-  const addToOrder = item => {
-    onItemSelected(item);
-  };
-
   return (
     <div className="menuDiv">
       <h1 className="menuHeader">Menu</h1>
@@ -68,7 +79,7 @@ function Menu({ onItemSelected }) {
         {itemsToDisplay.map(item => {
           return (
             <MenuItem
-              onClick={() => addToOrder(item)}
+              onClick={() => handleItemClick(item)}
               key={item.itemId}
               name={item.itemName}
               price={item.basePrice}
@@ -76,6 +87,15 @@ function Menu({ onItemSelected }) {
           );
         })}
       </div>
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={6000}
+        onClose={handleSnackbarClose}
+      >
+        <Alert onClose={handleSnackbarClose} severity="error">
+          This item is out of stock!
+        </Alert>
+      </Snackbar>
     </div>
   );
 }
