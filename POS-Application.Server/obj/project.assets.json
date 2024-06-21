@@ -3025,7 +3025,7 @@
   "projectFileDependencyGroups": {
     "net8.0": [
       "Microsoft.AspNetCore.Authentication.JwtBearer >= 8.0.6",
-      "Microsoft.AspNetCore.SpaProxy >= 8.*-*",
+      "Microsoft.AspNetCore.SpaProxy >= 8.0.6",
       "Microsoft.EntityFrameworkCore >= 8.0.6",
       "Microsoft.EntityFrameworkCore.Design >= 8.0.6",
       "Pomelo.EntityFrameworkCore.MySql >= 8.0.2",
@@ -3034,27 +3034,24 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Ninja\\.nuget\\packages\\": {}
+    "/Users/matthewlewis/.nuget/packages/": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Ninja\\Documents\\School Shit\\School Shit 2024 Summer\\POS-Application\\POS-Application.Server\\POS-Application.Server.csproj",
+      "projectUniqueName": "/Users/matthewlewis/erikabranch/POS-Application/POS-Application.Server/POS-Application.Server.csproj",
       "projectName": "POS-Application.Server",
-      "projectPath": "C:\\Users\\Ninja\\Documents\\School Shit\\School Shit 2024 Summer\\POS-Application\\POS-Application.Server\\POS-Application.Server.csproj",
-      "packagesPath": "C:\\Users\\Ninja\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Ninja\\Documents\\School Shit\\School Shit 2024 Summer\\POS-Application\\POS-Application.Server\\obj\\",
+      "projectPath": "/Users/matthewlewis/erikabranch/POS-Application/POS-Application.Server/POS-Application.Server.csproj",
+      "packagesPath": "/Users/matthewlewis/.nuget/packages/",
+      "outputPath": "/Users/matthewlewis/erikabranch/POS-Application/POS-Application.Server/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\Ninja\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        "/Users/matthewlewis/.nuget/NuGet/NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net8.0"
       ],
       "sources": {
-        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-        "C:\\Program Files\\dotnet\\library-packs": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
@@ -3084,7 +3081,7 @@
           },
           "Microsoft.AspNetCore.SpaProxy": {
             "target": "Package",
-            "version": "[8.*-*, )"
+            "version": "[8.0.6, )"
           },
           "Microsoft.EntityFrameworkCore": {
             "target": "Package",
@@ -3128,7 +3125,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.300/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/8.0.302/PortableRuntimeIdentifierGraph.json"
       }
     }
   }

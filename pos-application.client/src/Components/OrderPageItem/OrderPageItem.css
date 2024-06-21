@@ -1,0 +1,34 @@
+.orderItemValues {
+  display: flex;
+  justify-content: space-between;
+  padding-left: 50px;
+  padding-right: 150px;
+  margin-bottom: 0px;
+  padding-bottom: 0px;
+}
+
+.orderItemValues li {
+  list-style: none;
+  font-size: 1.25em;
+}
+
+.itemQuantity {
+  padding-right: 10px;
+}
+
+.itemTotalPrice {
+  padding-right: 25px;
+}
+
+.orderIngredients {
+  margin-top: 10px;
+  padding-left: 75px;
+}
+
+.orderIngredients li {
+  list-style: none;
+}
+
+.ingredientQuantity {
+  margin-right: 10px;
+}

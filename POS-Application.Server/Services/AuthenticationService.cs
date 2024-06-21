@@ -56,6 +56,10 @@ namespace POS_Application.Server.Services
 
         public async Task LogoutAsync(string token)
         {
+            if (token.StartsWith("Bearer "))
+            {
+                token = token.Substring(7);
+            }
             var tokenInfo = await _dbContext.Tokens.FirstOrDefaultAsync(t => t.Token == token);
             // Update token validity
             tokenInfo.IsValid = false;

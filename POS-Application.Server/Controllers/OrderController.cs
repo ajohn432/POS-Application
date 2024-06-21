@@ -316,7 +316,7 @@ namespace POS_Application.Server.Controllers
             try
             {
                 await _orderService.PayOrderAsync(orderId, request.CreditCardNumber);
-                return Ok("Payment accecpted, order is now considered Paid.");
+                return Ok("Payment accepted, order is now considered Paid.");
             }
             catch (ArgumentException ex)
             {

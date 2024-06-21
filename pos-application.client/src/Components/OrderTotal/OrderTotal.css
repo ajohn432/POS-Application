@@ -1,0 +1,18 @@
+.orderTotalDiv {
+  margin-left: 5%;
+  margin-right: 5%;
+}
+
+.paymentButtons {
+  display: flex;
+  justify-content: center;
+  position: relative;
+  bottom: 0;
+  margin-top: 5px;
+  flex-wrap: wrap;
+}
+
+.emptyCartMessage {
+  text-align: center;
+  padding-bottom: 5px;
+}

@@ -1,0 +1,16 @@
+.startOrderFormDiv {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+}
+.orderFormLabel {
+  margin: 0px 150px 5px 150px;
+}
+
+.orderFormInput {
+  margin: 0px 150px 3px 150px;
+}
+
+.orderFormButton {
+  margin: 5px 150px 0px 150px;
+}

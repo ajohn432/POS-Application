@@ -1,0 +1,52 @@
+.orderPageDiv {
+  border-style: solid;
+  border-width: 2px;
+  border-radius: 10px;
+  border-color: #ffffff;
+  background-color: #ffffff;
+  margin: 20px 50px 20px 50px;
+  height: auto;
+}
+
+.orderH1 {
+  text-align: center;
+  font-weight: normal;
+  font-size: 36px;
+  margin-top: 25px;
+  margin-bottom: 0px;
+}
+
+.orderBar {
+  border: none;
+  margin: 0px 40% 10px 40%;
+  height: 1.1px;
+  color: black;
+  background-color: black;
+}
+
+.cartItem {
+  padding-right: 5%;
+  padding-left: 5%;
+  margin: 5px 0;
+}
+
+.totalBar {
+  border: none;
+  margin: 10px 5% 10px 5%;
+  height: 1.1px;
+  color: black;
+  background-color: black;
+}
+
+.orderScroll {
+  overflow: auto;
+  height: 65vh;
+}
+
+.removeItemBtn {
+  background-color: #ffffff;
+  border-width: 0.5px;
+  margin-right: 5px;
+  border-radius: 50%;
+  cursor: pointer;
+}

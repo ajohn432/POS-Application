@@ -1,49 +1,59 @@
-import { useEffect, useState } from 'react';
-import './App.css';
+import "./App.css";
+import OrderPage from "./Components/OrderPage/OrderPage.jsx";
+import Menu from "./Components/Menu/Menu.jsx";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 function App() {
-    const [forecasts, setForecasts] = useState();
+  const [orderId, setOrderId] = useState("");
+  const [orderHasStarted, setOrderHasStarted] = useState(false);
+  const [selectedItem, setSelectedItem] = useState(null);
+  const navigate = useNavigate();
 
-    useEffect(() => {
-        populateWeatherData();
-    }, []);
+  const handleClick = id => {
+    setOrderId(id);
+    setOrderHasStarted(true);
+  };
 
-    const contents = forecasts === undefined
-        ? <p><em>Loading... Please refresh once the ASP.NET backend has started. See <a href="https://aka.ms/jspsintegrationreact">https://aka.ms/jspsintegrationreact</a> for more details.</em></p>
-        : <table className="table table-striped" aria-labelledby="tableLabel">
-            <thead>
-                <tr>
-                    <th>Date</th>
-                    <th>Temp. (C)</th>
-                    <th>Temp. (F)</th>
-                    <th>Summary</th>
-                </tr>
-            </thead>
-            <tbody>
-                {forecasts.map(forecast =>
-                    <tr key={forecast.date}>
-                        <td>{forecast.date}</td>
-                        <td>{forecast.temperatureC}</td>
-                        <td>{forecast.temperatureF}</td>
-                        <td>{forecast.summary}</td>
-                    </tr>
-                )}
-            </tbody>
-        </table>;
+  const handleItemSelected = item => {
+    setSelectedItem(item);
+  };
 
-    return (
-        <div>
-            <h1 id="tableLabel">Weather forecast</h1>
-            <p>This component demonstrates fetching data from the server.</p>
-            {contents}
-        </div>
-    );
-    
-    async function populateWeatherData() {
-        const response = await fetch('weatherforecast');
-        const data = await response.json();
-        setForecasts(data);
+  const handleLogout = async () => {
+    const token = localStorage.getItem("token");
+    try {
+      await axios.post(
+        "https://localhost:7007/api/auth/logout",
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }
+      );
+      localStorage.removeItem("token");
+      navigate("/");
+    } catch (error) {
+      console.error("Error during logout:", error);
     }
+  };
+
+  return (
+    <div className="logoutContainer">
+      <div className="logoutButtonContainer">
+        <button className="logoutButton" onClick={handleLogout}>
+          Logout
+        </button>
+      </div>
+      <div className="mainContainer">
+        <OrderPage sendToParent={handleClick} selectedItem={selectedItem} />
+        {orderHasStarted && (
+          <Menu id={orderId} onItemSelected={handleItemSelected} />
+        )}
+      </div>
+    </div>
+  );
 }
 
 export default App;

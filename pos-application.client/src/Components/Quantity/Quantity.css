@@ -1,0 +1,14 @@
+.decreaseQuantityBtn,
+.increaseQuantityBtn {
+  color: black;
+  background-color: #ffffff;
+  border-width: 0.5px;
+  margin-right: 5px;
+  margin-left: 5px;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.buttonSpan {
+  margin-right: 10px;
+}
