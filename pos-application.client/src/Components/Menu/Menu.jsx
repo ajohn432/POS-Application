@@ -53,7 +53,7 @@ function Menu({ onItemSelected }) {
     return <div>Error: {error}</div>;
   }
 
-  const itemsToDisplay = data.slice(0, 8);
+  const itemsToDisplay = data.slice(0, 12);
 
   const addToOrder = item => {
     onItemSelected(item);

@@ -29,7 +29,7 @@ function OrderPageItem({ item, onAddToCart, orderId }) {
         total + ingredient.price * ingredientQuantities[index],
       0
     );
-    return itemTotal + ingredientsTotal;
+    return (itemTotal + ingredientsTotal).toFixed(2);
   };
 
   const handleAddToCart = async () => {
@@ -44,7 +44,6 @@ function OrderPageItem({ item, onAddToCart, orderId }) {
 
     try {
       const token = localStorage.getItem("token");
-      console.log('Order ID before API call:', orderId, 'Type:', typeof orderId);
       const response = await axios.post(
         `https://localhost:7007/api/orders/${orderId}/items`,
         itemToAdd,
@@ -54,10 +53,9 @@ function OrderPageItem({ item, onAddToCart, orderId }) {
           },
         }
       );
-      console.log('adding item to order:', response.data);
       const cartItem = {
         ...response.data,
-        itemName: item.itemName, 
+        itemName: item.itemName,
         ingredients: item.ingredients.$values.map((ingredient, index) => ({
           ...ingredient,
           quantity: ingredientQuantities[index],

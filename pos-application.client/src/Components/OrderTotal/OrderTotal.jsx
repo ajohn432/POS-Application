@@ -16,25 +16,35 @@ function OrderTotal({ orderId, cart }) {
     taxAmount: 0,
     billAfterDiscountAndTax: 0,
     tipAmount: 0,
-    finalBillAmount: 0
+    finalBillAmount: 0,
   });
-  const [subtotal, setSubtotal] = useState(0);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [discountError, setDiscountError] = useState(null);
+
+  const calculateSubtotal = () => {
+    return cart.reduce((total, cartItem) => {
+      const itemTotal = cartItem.basePrice * cartItem.quantity;
+      const ingredientsTotal = cartItem.ingredients.reduce(
+        (ingredientSum, ingredient) =>
+          ingredientSum + ingredient.price * ingredient.quantity,
+        0
+      );
+      return total + itemTotal + ingredientsTotal;
+    }, 0);
+  };
 
   const fetchAmounts = async () => {
     try {
       const token = localStorage.getItem("token");
-      console.log(`Fetching amounts for order ID: ${orderId}`);
       const response = await axios.get(
         `https://localhost:7007/api/orders/${orderId}/amounts`,
         {
           headers: {
-            Authorization: `Bearer ${token}`
-          }
+            Authorization: `Bearer ${token}`,
+          },
         }
       );
-      console.log("API response:", response);
       setAmounts(response.data);
       setLoading(false);
     } catch (error) {
@@ -44,32 +54,29 @@ function OrderTotal({ orderId, cart }) {
     }
   };
 
-  const fetchSubtotal = async () => {
-    try {
-      const token = localStorage.getItem("token");
-      const response = await axios.get(
-        `https://localhost:7007/api/orders/${orderId}/calculate-bill-cost`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        }
-      );
-      setSubtotal(response.data);
-    } catch (error) {
-      console.error("Error fetching subtotal:", error);
-      setError("Error fetching subtotal");
-    }
-  };
-
   useEffect(() => {
     if (orderId) {
       fetchAmounts();
-      fetchSubtotal();
     }
-  }, [orderId, cart]);
+  }, [orderId]);
 
-  const handleDiscountChange = async discountCode => {
+  useEffect(() => {
+    if (!loading) {
+      const newSubtotal = calculateSubtotal();
+      const taxAmount = newSubtotal * (amounts.taxRate / 100);
+      const discountAmount = newSubtotal * (amounts.totalDiscountPercentage / 100);
+      const finalBillAmount = newSubtotal + taxAmount - discountAmount + amounts.tipAmount;
+      setAmounts((prevAmounts) => ({
+        ...prevAmounts,
+        preDiscountCost: newSubtotal,
+        taxAmount: taxAmount,
+        discountAmount: discountAmount,
+        finalBillAmount: finalBillAmount,
+      }));
+    }
+  }, [cart, amounts.totalDiscountPercentage, amounts.tipAmount]);
+
+  const handleDiscountChange = async (discountCode) => {
     try {
       const token = localStorage.getItem("token");
       await axios.post(
@@ -77,18 +84,19 @@ function OrderTotal({ orderId, cart }) {
         { discountCode },
         {
           headers: {
-            Authorization: `Bearer ${token}`
+            Authorization: `Bearer ${token}`,
           }
         }
       );
+      setDiscountError(null); // Clear any previous error message
       await fetchAmounts();
     } catch (error) {
       console.error("Error applying discount:", error);
-      setError("Error applying discount");
+      setDiscountError("Invalid discount code");
     }
   };
 
-  const handleTipChange = async tipAmount => {
+  const handleTipChange = async (tipAmount) => {
     try {
       const token = localStorage.getItem("token");
       await axios.put(
@@ -96,7 +104,7 @@ function OrderTotal({ orderId, cart }) {
         { tipAmount },
         {
           headers: {
-            Authorization: `Bearer ${token}`
+            Authorization: `Bearer ${token}`,
           }
         }
       );
@@ -121,9 +129,10 @@ function OrderTotal({ orderId, cart }) {
 
   return (
     <div className="orderTotalDiv">
-      <p>Subtotal: {subtotal.toFixed(2)}</p>
+      {discountError && <p className="error">{discountError}</p>}
+      <p>Subtotal: {amounts.preDiscountCost.toFixed(2)}</p>
       <p>
-        Tax ({amounts.taxRate * 1}%): {amounts.taxAmount.toFixed(2)}
+        Tax ({amounts.taxRate}%): {amounts.taxAmount.toFixed(2)}
       </p>
       <p>
         Discount ({amounts.totalDiscountPercentage}%):{" "}
@@ -142,7 +151,18 @@ function OrderTotal({ orderId, cart }) {
 
 OrderTotal.propTypes = {
   orderId: PropTypes.string.isRequired,
-  cart: PropTypes.array.isRequired
+  cart: PropTypes.arrayOf(
+    PropTypes.shape({
+      basePrice: PropTypes.number.isRequired,
+      quantity: PropTypes.number.isRequired,
+      ingredients: PropTypes.arrayOf(
+        PropTypes.shape({
+          price: PropTypes.number.isRequired,
+          quantity: PropTypes.number.isRequired,
+        })
+      ).isRequired,
+    })
+  ).isRequired,
 };
 
 export default OrderTotal;

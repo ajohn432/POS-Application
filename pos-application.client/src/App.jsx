@@ -3,6 +3,7 @@ import OrderPage from "./Components/OrderPage/OrderPage.jsx";
 import Menu from "./Components/Menu/Menu.jsx";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 function App() {
   const [orderId, setOrderId] = useState("");
@@ -19,9 +20,23 @@ function App() {
     setSelectedItem(item);
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    navigate("/");
+  const handleLogout = async () => {
+    const token = localStorage.getItem("token");
+    try {
+      await axios.post(
+        "https://localhost:7007/api/auth/logout",
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      localStorage.removeItem("token");
+      navigate("/");
+    } catch (error) {
+      console.error("Error during logout:", error);
+    }
   };
 
   return (
