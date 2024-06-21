@@ -13,6 +13,7 @@ function OrderPage(props) {
   const [orderName, setOrderName] = useState("");
   const [cart, setCart] = useState([]);
   const [showOrderIdentifier, setShowOrderIdentifier] = useState(false);
+  const [key, setKey] = useState(0);
 
   const handleClick = (id, name) => {
     setOrderId(id);
@@ -59,24 +60,28 @@ function OrderPage(props) {
 
       {showOrderIdentifier && <OrderIdentifier name={orderName} id={orderId} />}
       <div className="orderScroll">
-        {/* <h2 className="cartHeader">Cart:</h2> */}
         {cart.map((cartItem, index) => (
           <div key={index} className="cartItem">
-            {cartItem.itemName} (
-            {cartItem.ingredients && cartItem.ingredients.length > 0 ? (
-              cartItem.ingredients.map((ingredient, idx) => (
-                <span key={idx}>
-                  {ingredient.name} x{ingredient.quantity}
-                  {idx < cartItem.ingredients.length - 1 ? ", " : ""}
-                </span>
-              ))
-            ) : (
-              <span>No ingredients</span>
-            )}
-            )
-            <button onClick={() => handleRemoveFromCart(cartItem.itemId)}>
-              Remove
+            <button
+              onClick={() => handleRemoveFromCart(cartItem.itemId)}
+              className="removeItemBtn"
+            >
+              -
             </button>
+            <span className="cartItemText">
+              {cartItem.itemName} (
+              {cartItem.ingredients && cartItem.ingredients.length > 0 ? (
+                cartItem.ingredients.map((ingredient, idx) => (
+                  <span key={idx}>
+                    {ingredient.name} x{ingredient.quantity}
+                    {idx < cartItem.ingredients.length - 1 ? ", " : ""}
+                  </span>
+                ))
+              ) : (
+                <span>No ingredients</span>
+              )}
+              )
+            </span>
           </div>
         ))}
         {selectedItem && (

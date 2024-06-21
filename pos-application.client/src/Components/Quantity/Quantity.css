@@ -1,8 +1,12 @@
 .decreaseQuantityBtn,
 .increaseQuantityBtn {
-  border-radius: 75%;
-  background-color: white;
   color: black;
+  background-color: #ffffff;
+  border-width: 0.5px;
+  margin-right: 5px;
+  margin-left: 5px;
+  border-radius: 50%;
+  cursor: pointer;
 }
 
 .buttonSpan {

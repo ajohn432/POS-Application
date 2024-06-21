@@ -28,8 +28,8 @@ function App() {
         {},
         {
           headers: {
-            Authorization: `Bearer ${token}`,
-          },
+            Authorization: `Bearer ${token}`
+          }
         }
       );
       localStorage.removeItem("token");
@@ -41,7 +41,11 @@ function App() {
 
   return (
     <div className="logoutContainer">
-      <button className="logoutButton" onClick={handleLogout}>Logout</button>
+      <div className="logoutButtonContainer">
+        <button className="logoutButton" onClick={handleLogout}>
+          Logout
+        </button>
+      </div>
       <div className="mainContainer">
         <OrderPage sendToParent={handleClick} selectedItem={selectedItem} />
         {orderHasStarted && (

@@ -3,7 +3,7 @@
 "ServerUrl": "https://localhost:5173",
 "RedirectUrl": "",
 "LaunchCommand": "npm run dev",
-"WorkingDirectory": "/Users/matthewlewis/erikabranch/POS-Application/POS-Application.Server/../pos-application.client",
+"WorkingDirectory": "/Users/erikasudderth/Desktop/POS-Project/POS-Application/POS-Application.Server/../pos-application.client",
 "MaxTimeoutInSeconds": "120",
 "KeepRunning": "false"
 }

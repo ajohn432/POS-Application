@@ -38,8 +38,8 @@ function OrderPageItem({ item, onAddToCart, orderId }) {
       quantity: itemQuantity,
       ingredients: item.ingredients.$values.map((ingredient, index) => ({
         ingredientId: ingredient.ingredientId,
-        quantity: ingredientQuantities[index],
-      })),
+        quantity: ingredientQuantities[index]
+      }))
     };
 
     try {
@@ -49,8 +49,8 @@ function OrderPageItem({ item, onAddToCart, orderId }) {
         itemToAdd,
         {
           headers: {
-            Authorization: `Bearer ${token}`,
-          },
+            Authorization: `Bearer ${token}`
+          }
         }
       );
       const cartItem = {
@@ -58,8 +58,8 @@ function OrderPageItem({ item, onAddToCart, orderId }) {
         itemName: item.itemName,
         ingredients: item.ingredients.$values.map((ingredient, index) => ({
           ...ingredient,
-          quantity: ingredientQuantities[index],
-        })),
+          quantity: ingredientQuantities[index]
+        }))
       };
       onAddToCart(cartItem);
     } catch (error) {
@@ -110,13 +110,13 @@ OrderPageItem.propTypes = {
           ingredientId: PropTypes.string.isRequired,
           name: PropTypes.string.isRequired,
           price: PropTypes.number.isRequired,
-          quantity: PropTypes.number,
+          quantity: PropTypes.number
         })
-      ).isRequired,
-    }).isRequired,
+      ).isRequired
+    }).isRequired
   }).isRequired,
   onAddToCart: PropTypes.func.isRequired,
-  orderId: PropTypes.string.isRequired,
+  orderId: PropTypes.string.isRequired
 };
 
 export default OrderPageItem;

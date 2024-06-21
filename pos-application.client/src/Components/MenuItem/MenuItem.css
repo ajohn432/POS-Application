@@ -9,8 +9,19 @@
   border-radius: 10px;
   background-color: white;
   font-size: calc(0.5vw + 0.5vh);
+  overflow-wrap: break-word;
+  cursor: pointer;
 }
 
 .menuItemCard:hover {
   transform: scale(1.05);
+}
+
+.menuItemCard h1 {
+  font-size: 22px;
+}
+
+.menuItemCard h2 {
+  font-size: 18px;
+  font-weight: normal;
 }
